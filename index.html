@@ -8,12 +8,13 @@
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: #000;
       color: #fff;
     }
@@ -33,6 +34,7 @@
       height: 100%;
       object-fit: cover;
     }
+    /* Capa d'interfície */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -40,117 +42,129 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 24px) 16px;
       pointer-events: none;
     }
     .header {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 10px 22px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       align-self: center;
       text-align: center;
       pointer-events: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
     .header h1 {
       margin: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       background: linear-gradient(135deg, #00f2fe, #4facfe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .status-badge {
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-top: 2px;
-      display: block;
-    }
+    /* Targeta de controls inferior */
     .controls-card {
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 28px;
       padding: 16px 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       pointer-events: auto;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       width: 100%;
-      max-width: 420px;
+      max-width: 380px;
       margin: 0 auto;
     }
     .selector-group {
       display: flex;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 14px;
-      padding: 3px;
-      gap: 2px;
+      padding: 4px;
+      gap: 4px;
     }
     .mode-btn {
       flex: 1;
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 8px 0;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 10px 0;
+      font-size: 0.9rem;
+      font-weight: 700;
       border-radius: 11px;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
     .mode-btn.active {
       background: #38bdf8;
       color: #0f172a;
+      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
     }
-    .slider-row {
+    .slice-control-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
-    .label {
-      font-size: 0.9rem;
+    .btn-step {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 1.5rem;
       font-weight: 600;
-      color: #e2e8f0;
-    }
-    .slider-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
-    input[type=range] {
-      -webkit-appearance: none;
-      width: 100%;
-      background: rgba(255, 255, 255, 0.2);
-      height: 6px;
-      border-radius: 3px;
-      outline: none;
-    }
-    input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 22px;
-      width: 22px;
-      border-radius: 50%;
-      background: #38bdf8;
-      cursor: pointer;
-    }
-    .count-badge {
-      background: #38bdf8;
-      color: #0f172a;
-      font-weight: 800;
-      font-size: 1.1rem;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-step:active {
+      background: rgba(56, 189, 248, 0.4);
+    }
+    .slice-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .count-badge {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #38bdf8;
+      line-height: 1;
+    }
+    .count-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+    #error-msg {
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
+      padding: 10px 18px;
+      border-radius: 12px;
+      display: none;
+      z-index: 30;
+      font-size: 0.85rem;
+      text-align: center;
+      max-width: 85%;
     }
   </style>
-  <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()"></script>
 </head>
 <body>
 
@@ -158,25 +172,26 @@
   <video id="webcam" autoplay playsinline muted></video>
   <canvas id="overlay"></canvas>
 
+  <div id="error-msg"></div>
+
   <div class="ui-layer">
     <div class="header">
       <h1>Smart Slicer</h1>
-      <span id="status" class="status-badge">Iniciant...</span>
     </div>
 
     <div class="controls-card">
       <div class="selector-group">
-        <button class="mode-btn active" onclick="setMode('auto')">Auto</button>
-        <button class="mode-btn" onclick="setMode('circle')">Cercle</button>
+        <button class="mode-btn active" onclick="setMode('circle')">Rodona</button>
         <button class="mode-btn" onclick="setMode('square')">Quadrat</button>
       </div>
 
-      <div class="slider-row">
-        <span class="label">Talls</span>
-        <div class="slider-container">
-          <input type="range" id="slices" min="1" max="10" value="8">
+      <div class="slice-control-row">
+        <button class="btn-step" onclick="changeSlices(-1)">−</button>
+        <div class="slice-display">
+          <span class="count-badge" id="slice-count">8</span>
+          <span class="count-label">Porcions</span>
         </div>
-        <div class="count-badge" id="slice-count">8</div>
+        <button class="btn-step" onclick="changeSlices(1)">+</button>
       </div>
     </div>
   </div>
@@ -186,39 +201,21 @@
   const video = document.getElementById('webcam');
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
-  const slider = document.getElementById('slices');
   const sliceCountDisplay = document.getElementById('slice-count');
-  const statusBadge = document.getElementById('status');
+  const errorMsg = document.getElementById('error-msg');
 
-  // Canvas amagat molt petit per analitzar la imatge sense carregar la CPU
-  const cvCanvas = document.createElement('canvas');
-  cvCanvas.width = 160;
-  cvCanvas.height = 160;
-  const cvCtx = cvCanvas.getContext('2d');
-
-  let currentMode = 'auto';
-  let isOpenCvReady = false;
-  let isProcessingFrame = false;
-
-  let targetShape = { x: 0, y: 0, radius: 0, type: 'circle', detected: false };
-
-  function onOpenCvReady() {
-    isOpenCvReady = true;
-    statusBadge.textContent = "Auto-detecció activa (Fluida)";
-    // Iniciar bucle d'anàlisi lent (cada 300ms = ~3 cops per segon)
-    setInterval(detectObjectFast, 300);
-  }
+  let currentMode = 'circle';
+  let slices = 8;
 
   function setMode(mode) {
     currentMode = mode;
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
+  }
 
-    if (mode !== 'auto') {
-      statusBadge.textContent = `Manual (${mode === 'circle' ? 'Cercle' : 'Quadrat'})`;
-    } else {
-      statusBadge.textContent = isOpenCvReady ? "Auto-detecció activa" : "Carregant IA...";
-    }
+  function changeSlices(delta) {
+    slices = Math.min(10, Math.max(1, slices + delta));
+    sliceCountDisplay.textContent = slices;
   }
 
   function resizeCanvas() {
@@ -236,85 +233,25 @@
       video.srcObject = stream;
       video.play();
     } catch (err) {
-      statusBadge.textContent = "Error de càmera";
+      errorMsg.style.display = 'block';
+      errorMsg.textContent = "No s'ha pogut accedir a la càmera. Assegura't de fer servir HTTPS i haver donat permisos al navegador.";
     }
   }
 
-  // Algoritme d'anàlisi ultra-lleuger executat només 3 cops per segon
-  function detectObjectFast() {
-    if (!isOpenCvReady || currentMode !== 'auto' || video.readyState !== 4 || isProcessingFrame) return;
-
-    isProcessingFrame = true;
-
-    try {
-      cvCtx.drawImage(video, 0, 0, cvCanvas.width, cvCanvas.height);
-      let src = cv.imread(cvCanvas);
-      let gray = new cv.Mat();
-      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-      cv.GaussianBlur(gray, gray, new cv.Size(3, 3), 0);
-
-      let circles = new cv.Mat();
-      // Paràmetres ajustats per a 160px de resolució
-      cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT, 1, 30, 60, 25, 15, 75);
-
-      if (circles.cols > 0) {
-        const scaleX = canvas.width / cvCanvas.width;
-        const scaleY = canvas.height / cvCanvas.height;
-
-        const rawX = circles.data32F[0] * scaleX;
-        const rawY = circles.data32F[1] * scaleY;
-        const rawR = circles.data32F[2] * Math.min(scaleX, scaleY);
-
-        if (!targetShape.detected) {
-          targetShape.x = rawX;
-          targetShape.y = rawY;
-          targetShape.radius = rawR;
-          targetShape.detected = true;
-        } else {
-          // Objectiu cap a les noves coordenades
-          targetShape.targetX = rawX;
-          targetShape.targetY = rawY;
-          targetShape.targetR = rawR;
-        }
-      }
-
-      src.delete(); gray.delete(); circles.delete();
-    } catch (e) {
-      // Ignorar errors de memòria de marcadors
-    }
-
-    isProcessingFrame = false;
-  }
-
-  // Dibuix a la pantalla (60 FPS super fluids)
   function drawOverlay() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const numSlices = parseInt(slider.value, 10);
-    sliceCountDisplay.textContent = numSlices;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.65;
 
-    let centerX = canvas.width / 2;
-    let centerY = canvas.height / 2;
-    let radius = Math.min(centerX, centerY) * 0.6;
-    let shapeType = currentMode === 'square' ? 'square' : 'circle';
-
-    // Suavitzar la transició de les coordenades en cada fotograma
-    if (currentMode === 'auto' && targetShape.detected) {
-      if (targetShape.targetX) {
-        targetShape.x += (targetShape.targetX - targetShape.x) * 0.1;
-        targetShape.y += (targetShape.targetY - targetShape.y) * 0.1;
-        targetShape.radius += (targetShape.targetR - targetShape.radius) * 0.1;
-      }
-      centerX = targetShape.x;
-      centerY = targetShape.y;
-      radius = targetShape.radius;
-      shapeType = 'circle';
-    }
-
-    // Dibuixar la guia
     ctx.save();
+    ctx.shadowColor = 'rgba(0, 242, 254, 0.5)';
+    ctx.shadowBlur = 10;
+
+    // 1. Dibuixar contorn exterior
     ctx.beginPath();
-    if (shapeType === 'circle') {
+    if (currentMode === 'circle') {
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
     } else {
       ctx.rect(centerX - radius, centerY - radius, radius * 2, radius * 2);
@@ -324,21 +261,22 @@
     ctx.setLineDash([8, 6]);
     ctx.stroke();
 
-    // Centre
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = '#ff0055';
-    ctx.fill();
-
-    // Línies de tall
-    if (numSlices > 1) {
+    // 2. Dibuixar línies de tall interiors
+    if (slices > 1) {
       ctx.setLineDash([]);
       ctx.strokeStyle = '#ff0055';
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 3;
 
-      if (shapeType === 'circle') {
-        const angleStep = (2 * Math.PI) / numSlices;
-        for (let i = 0; i < numSlices; i++) {
+      if (currentMode === 'circle') {
+        // Dibuixar centre
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = '#ff0055';
+        ctx.fill();
+
+        // Talls radials
+        const angleStep = (2 * Math.PI) / slices;
+        for (let i = 0; i < slices; i++) {
           const angle = i * angleStep - (Math.PI / 2);
           const x = centerX + radius * Math.cos(angle);
           const y = centerY + radius * Math.sin(angle);
@@ -349,18 +287,93 @@
           ctx.stroke();
         }
       } else {
-        const cols = Math.ceil(Math.sqrt(numSlices));
-        const step = (radius * 2) / cols;
-        for (let i = 1; i < cols; i++) {
-          ctx.beginPath();
-          ctx.moveTo(centerX - radius + i * step, centerY - radius);
-          ctx.lineTo(centerX - radius + i * step, centerY + radius);
-          ctx.stroke();
+        // Talls per a formes quadrades/rectangulars
+        const left = centerX - radius;
+        const top = centerY - radius;
+        const size = radius * 2;
 
+        if (slices === 2) {
+          // 2 porcions: Línia central vertical
           ctx.beginPath();
-          ctx.moveTo(centerX - radius, centerY - radius + i * step);
-          ctx.lineTo(centerX + radius, centerY - radius + i * step);
+          ctx.moveTo(centerX, top);
+          ctx.lineTo(centerX, top + size);
           ctx.stroke();
+        } else if (slices === 3) {
+          // 3 porcions: 2 línies verticals
+          const step = size / 3;
+          for (let i = 1; i < 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * step, top);
+            ctx.lineTo(left + i * step, top + size);
+            ctx.stroke();
+          }
+        } else if (slices === 4) {
+          // 4 porcions: Creu (2x2)
+          ctx.beginPath();
+          ctx.moveTo(centerX, top);
+          ctx.lineTo(centerX, top + size);
+          ctx.moveTo(left, centerY);
+          ctx.lineTo(left + size, centerY);
+          ctx.stroke();
+        } else if (slices === 6) {
+          // 6 porcions: Reixeta (3x2)
+          const stepX = size / 3;
+          for (let i = 1; i < 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * stepX, top);
+            ctx.lineTo(left + i * stepX, top + size);
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(left, centerY);
+          ctx.lineTo(left + size, centerY);
+          ctx.stroke();
+        } else if (slices === 8) {
+          // 8 porcions: Reixeta (4x2)
+          const stepX = size / 4;
+          for (let i = 1; i < 4; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * stepX, top);
+            ctx.lineTo(left + i * stepX, top + size);
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(left, centerY);
+          ctx.lineTo(left + size, centerY);
+          ctx.stroke();
+        } else if (slices === 9) {
+          // 9 porcions: Reixeta (3x3)
+          const step = size / 3;
+          for (let i = 1; i < 3; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * step, top);
+            ctx.lineTo(left + i * step, top + size);
+            ctx.moveTo(left, top + i * step);
+            ctx.lineTo(left + size, top + i * step);
+            ctx.stroke();
+          }
+        } else if (slices === 10) {
+          // 10 porcions: Reixeta (5x2)
+          const stepX = size / 5;
+          for (let i = 1; i < 5; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * stepX, top);
+            ctx.lineTo(left + i * stepX, top + size);
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(left, centerY);
+          ctx.lineTo(left + size, centerY);
+          ctx.stroke();
+        } else {
+          // Tirades verticals regulars per a números prims o no estàndard (ex: 5, 7)
+          const step = size / slices;
+          for (let i = 1; i < slices; i++) {
+            ctx.beginPath();
+            ctx.moveTo(left + i * step, top);
+            ctx.lineTo(left + i * step, top + size);
+            ctx.stroke();
+          }
         }
       }
     }
@@ -368,10 +381,6 @@
     ctx.restore();
     requestAnimationFrame(drawOverlay);
   }
-
-  slider.addEventListener('input', () => {
-    sliceCountDisplay.textContent = slider.value;
-  });
 
   startCamera();
   drawOverlay();
