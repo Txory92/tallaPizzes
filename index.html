@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Smart Slicer Ultra</title>
+
+  <!-- PWA Manifest Inline via Data URL -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Smart Slicer Ultra","short_name":"Slicer","start_url":".","display":"standalone","background_color":"#090d16","theme_color":"#090d16","icons":[{"src":"https://fav.farm/🍕","sizes":"512x512","type":"image/png"}]}'>
+
   <style>
     * {
       box-sizing: border-box;
@@ -35,7 +42,7 @@
       object-fit: cover;
     }
 
-    /* Capa d'interfície UI amb efecte de fade-out */
+    /* Interfície UI */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -45,12 +52,12 @@
       height: 100%;
       padding: clamp(10px, 2vh, 16px);
       pointer-events: none;
-      transition: opacity 0.5s ease; /* Transició suau */
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       opacity: 1;
     }
 
     .ui-layer.idle {
-      opacity: 0; /* S'amaga quan està inactiu */
+      opacity: 0;
     }
     
     /* Header Superior */
@@ -64,7 +71,7 @@
       pointer-events: auto;
     }
     .brand-pill {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 6px 14px;
@@ -95,7 +102,7 @@
       gap: 6px;
     }
     .action-btn {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -117,24 +124,69 @@
       box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
     }
 
-    /* Panell Inferior Prim */
+    /* Panell Inferior Principal */
+    .controls-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      pointer-events: auto;
+    }
+
+    /* Sub-barres d'opcions contextuals (dinàmiques) */
+    .sub-bar {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 16px;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      gap: 10px;
+      font-size: 0.75rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sub-bar label {
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sub-bar select, .sub-bar input[type="range"] {
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      outline: none;
+    }
+
     .controls-card {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-radius: 22px;
       padding: 10px 14px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      pointer-events: auto;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
     }
 
     .selector-group {
@@ -148,7 +200,7 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 12px;
+      padding: 6px 10px;
       font-size: 0.75rem;
       font-weight: 600;
       border-radius: 99px;
@@ -171,13 +223,13 @@
       border-radius: 99px;
     }
     .btn-step {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.08);
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -186,25 +238,25 @@
     }
     .btn-step:active { background: rgba(255, 0, 85, 0.4); }
     .count-badge {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 800;
       color: #ff0055;
-      min-width: 22px;
+      min-width: 20px;
       text-align: center;
     }
 
     .tools-wrapper {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .color-picker {
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
     .color-dot {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
@@ -217,12 +269,12 @@
     .rotation-control {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       font-size: 0.7rem;
       color: #94a3b8;
     }
     .rotation-control input {
-      width: 65px;
+      width: 55px;
       accent-color: #ff0055;
       cursor: pointer;
     }
@@ -245,13 +297,13 @@
       .controls-card {
         justify-content: center;
         gap: 8px;
-        padding: 10px;
+        padding: 8px 10px;
       }
       .tools-wrapper {
         width: 100%;
         justify-content: space-between;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
-        padding-top: 8px;
+        padding-top: 6px;
       }
     }
   </style>
@@ -265,41 +317,88 @@
   <div id="error-msg"></div>
 
   <div class="ui-layer" id="ui-layer">
+    <!-- Header Superior -->
     <div class="top-bar">
       <div class="brand-pill">
         <h1>Slicer</h1>
         <span class="angle-badge" id="angle-info">45° (12.5%)</span>
       </div>
       <div class="top-actions">
+        <button id="hole-btn" class="action-btn" onclick="toggleHole()">🍩 Forat</button>
+        <button id="unequal-btn" class="action-btn" onclick="toggleUnequal()">📐 Asimètric</button>
         <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡</button>
         <button id="freeze-btn" class="action-btn" onclick="toggleFreeze()">📷 Congelar</button>
       </div>
     </div>
 
-    <div class="controls-card">
-      <div class="selector-group">
-        <button class="mode-btn active" onclick="setMode('circle', this)">Rodona</button>
-        <button class="mode-btn" onclick="setMode('square', this)">Quadrat</button>
-        <button class="mode-btn" onclick="setMode('rect', this)">Rect.</button>
+    <!-- Contenidor Inferior -->
+    <div class="controls-container">
+      
+      <!-- Sub-barra per al Mode Donut / Forat -->
+      <div class="sub-bar" id="subbar-hole" style="display:none;">
+        <label>
+          Mida Forat Interior:
+          <input type="range" id="inner-radius-input" min="0.1" max="0.7" step="0.05" value="0.3" oninput="drawOverlay()">
+        </label>
       </div>
 
-      <div class="slice-control">
-        <button class="btn-step" onclick="changeSlices(-1)">−</button>
-        <span class="count-badge" id="slice-count">8</span>
-        <button class="btn-step" onclick="changeSlices(1)">+</button>
+      <!-- Sub-barra per al Mode Asimètric (Porció VIP) -->
+      <div class="sub-bar" id="subbar-unequal" style="display:none;">
+        <label>
+          Mida Porció Gran:
+          <input type="range" id="vip-slice-input" min="15" max="50" step="5" value="30" oninput="updateAngleInfo(); drawOverlay();">
+          <span id="vip-percent-label" style="color:#ff0055; font-weight:bold;">30%</span>
+        </label>
       </div>
 
-      <div class="tools-wrapper">
-        <div class="color-picker">
-          <div class="color-dot active" style="background: #ff0055;" onclick="setColor('#ff0055', this)"></div>
-          <div class="color-dot" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
-          <div class="color-dot" style="background: #00ff66;" onclick="setColor('#00ff66', this)"></div>
-          <div class="color-dot" style="background: #ffea00;" onclick="setColor('#ffea00', this)"></div>
+      <!-- Sub-barra per al Mode Rectangle (Proporcions) -->
+      <div class="sub-bar" id="subbar-rect" style="display:none;">
+        <label>Proporció:
+          <select id="aspect-ratio-select" onchange="updateAspectRatio()">
+            <option value="1.333">4:3 (Llauna/Pa)</option>
+            <option value="1.777">16:9 (Panet Llarg)</option>
+            <option value="2.0">2:1 (Bandeja)</option>
+            <option value="1.0">1:1 (Quadrat)</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- Sub-barra per al Mode Retícula / Grid -->
+      <div class="sub-bar" id="subbar-grid" style="display:none;">
+        <label>Files:
+          <input type="number" id="grid-rows" min="1" max="10" value="3" style="width:45px;" onchange="drawOverlay()">
+        </label>
+        <label>Columnes:
+          <input type="number" id="grid-cols" min="1" max="10" value="4" style="width:45px;" onchange="drawOverlay()">
+        </label>
+      </div>
+
+      <!-- Controls Principals -->
+      <div class="controls-card">
+        <div class="selector-group">
+          <button class="mode-btn active" onclick="setMode('circle', this)">Rodona</button>
+          <button class="mode-btn" onclick="setMode('rect', this)">Rect.</button>
+          <button class="mode-btn" onclick="setMode('grid', this)">Grid</button>
         </div>
 
-        <div class="rotation-control">
-          <span>Gira</span>
-          <input type="range" id="rotation" min="0" max="360" value="0" oninput="drawOverlay()">
+        <div class="slice-control" id="slice-counter-wrapper">
+          <button class="btn-step" onclick="changeSlices(-1)">−</button>
+          <span class="count-badge" id="slice-count">8</span>
+          <button class="btn-step" onclick="changeSlices(1)">+</button>
+        </div>
+
+        <div class="tools-wrapper">
+          <div class="color-picker">
+            <div class="color-dot active" style="background: #ff0055;" onclick="setColor('#ff0055', this)"></div>
+            <div class="color-dot" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
+            <div class="color-dot" style="background: #00ff66;" onclick="setColor('#00ff66', this)"></div>
+            <div class="color-dot" style="background: #ffea00;" onclick="setColor('#ffea00', this)"></div>
+          </div>
+
+          <div class="rotation-control">
+            <span>Gira</span>
+            <input type="range" id="rotation" min="0" max="360" value="0" oninput="drawOverlay()">
+          </div>
         </div>
       </div>
     </div>
@@ -316,12 +415,16 @@
   const errorMsg = document.getElementById('error-msg');
   const freezeBtn = document.getElementById('freeze-btn');
   const torchBtn = document.getElementById('torch-btn');
+  const holeBtn = document.getElementById('hole-btn');
+  const unequalBtn = document.getElementById('unequal-btn');
   const rotationInput = document.getElementById('rotation');
 
   let currentMode = 'circle';
   let slices = 8;
   let lineColor = '#ff0055';
   let isFrozen = false;
+  let hasHole = false;
+  let isUnequal = false;
   let frozenCanvas = null;
   let videoTrack = null;
   let animationFrameId = null;
@@ -332,7 +435,7 @@
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
     radius: Math.min(window.innerWidth, window.innerHeight) * 0.28,
-    aspectRatio: 1.4
+    aspectRatio: 1.333
   };
 
   let touchState = {
@@ -342,20 +445,28 @@
     initialPinchDist: 0, initialRadius: 0
   };
 
-  // --- CONTROL D'AMAGAR LA INTERFÍCIE (AUTO-HIDE UI) ---
+  // --- REGISTRE PWA SERVICE WORKER (OFFLINE) ---
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE_NAME = 'slicer-v1';
+      self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./']))));
+      self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+    `;
+    const blob = new Blob([swCode], { type: 'text/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  }
+
+  // --- AUTO-HIDE UI ---
   function resetIdleTimer() {
     uiLayer.classList.remove('idle');
     clearTimeout(idleTimer);
-
-    // Només s'amaga si la imatge NO està congelada
     if (!isFrozen) {
       idleTimer = setTimeout(() => {
         uiLayer.classList.add('idle');
-      }, 3000); // 3 segons d'inactivitat
+      }, 3500);
     }
   }
 
-  // Detectar qualsevol interacció per mostrar la interfície i reiniciar el temps
   ['touchstart', 'mousemove', 'click', 'input'].forEach(evt => {
     window.addEventListener(evt, resetIdleTimer, { passive: true });
   });
@@ -364,7 +475,44 @@
     if (navigator.vibrate) navigator.vibrate(12);
   }
 
+  function toggleHole() {
+    vibrate();
+    hasHole = !hasHole;
+    holeBtn.classList.toggle('active', hasHole);
+    document.getElementById('subbar-hole').style.display = hasHole ? 'flex' : 'none';
+    drawOverlay();
+  }
+
+  function toggleUnequal() {
+    vibrate();
+    isUnequal = !isUnequal;
+    unequalBtn.classList.toggle('active', isUnequal);
+    document.getElementById('subbar-unequal').style.display = isUnequal ? 'flex' : 'none';
+    updateAngleInfo();
+    drawOverlay();
+  }
+
+  function updateAspectRatio() {
+    guide.aspectRatio = parseFloat(document.getElementById('aspect-ratio-select').value);
+    drawOverlay();
+  }
+
   function updateAngleInfo() {
+    if (currentMode === 'grid') {
+      const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
+      const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
+      angleInfo.textContent = `${rows}x${cols} (${rows * cols} porcions)`;
+      return;
+    }
+
+    if (isUnequal && currentMode === 'circle') {
+      const vipPct = parseInt(document.getElementById('vip-slice-input').value, 10);
+      document.getElementById('vip-percent-label').textContent = `${vipPct}%`;
+      const remainingPct = ((100 - vipPct) / (slices - 1)).toFixed(1);
+      angleInfo.textContent = `1x ${vipPct}% + ${slices - 1}x ${remainingPct}%`;
+      return;
+    }
+
     const pct = (100 / slices).toFixed(1);
     if (currentMode === 'circle') {
       const angle = (360 / slices).toFixed(1);
@@ -379,13 +527,18 @@
     currentMode = mode;
     document.querySelectorAll('.selector-group .mode-btn').forEach(btn => btn.classList.remove('active'));
     el.classList.add('active');
+
+    document.getElementById('subbar-rect').style.display = mode === 'rect' ? 'flex' : 'none';
+    document.getElementById('subbar-grid').style.display = mode === 'grid' ? 'flex' : 'none';
+    document.getElementById('slice-counter-wrapper').style.display = mode === 'grid' ? 'none' : 'flex';
+
     updateAngleInfo();
     drawOverlay();
   }
 
   function changeSlices(delta) {
     vibrate();
-    slices = Math.min(12, Math.max(1, slices + delta));
+    slices = Math.min(16, Math.max(1, slices + delta));
     sliceCountDisplay.textContent = slices;
     updateAngleInfo();
     drawOverlay();
@@ -419,7 +572,7 @@
       fCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
       video.pause();
       clearTimeout(idleTimer);
-      uiLayer.classList.remove('idle'); // Mantenir la UI visible congelat
+      uiLayer.classList.remove('idle');
     } else {
       freezeBtn.classList.remove('active');
       freezeBtn.innerHTML = '📷 Congelar';
@@ -437,9 +590,7 @@
       const capabilities = videoTrack.getCapabilities();
       if (capabilities.torch) {
         const settings = videoTrack.getSettings();
-        await videoTrack.applyConstraints({
-          advanced: [{ torch: !settings.torch }]
-        });
+        await videoTrack.applyConstraints({ advanced: [{ torch: !settings.torch }] });
       }
     }
   }
@@ -464,9 +615,7 @@
       videoTrack = stream.getVideoTracks()[0];
       
       const capabilities = videoTrack.getCapabilities?.();
-      if (capabilities && capabilities.torch) {
-        torchBtn.style.display = 'flex';
-      }
+      if (capabilities && capabilities.torch) torchBtn.style.display = 'flex';
 
       await video.play();
       startLoop();
@@ -477,7 +626,7 @@
     }
   }
 
-  // Doble toc per recentrar
+  // Interacció Tàctil
   canvas.addEventListener('touchstart', (e) => {
     const now = Date.now();
     if (now - lastTapTime < 300) {
@@ -523,7 +672,6 @@
 
   canvas.addEventListener('touchend', () => { touchState.isDragging = false; });
 
-  // Bucle de dibuix
   function startLoop() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     function loop() {
@@ -535,6 +683,7 @@
     loop();
   }
 
+  // --- DIBUIX DE LA GUIA I OVERLAY ---
   function drawOverlay() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -544,94 +693,129 @@
 
     const rotationRad = (parseInt(rotationInput.value, 10) * Math.PI) / 180;
     const r = guide.radius;
+    const innerRRatio = parseFloat(document.getElementById('inner-radius-input').value);
+    const innerR = r * innerRRatio;
 
     ctx.save();
     ctx.translate(guide.x, guide.y);
     ctx.rotate(rotationRad);
 
     ctx.shadowColor = lineColor;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 10;
     ctx.strokeStyle = lineColor;
     ctx.fillStyle = lineColor;
     ctx.lineWidth = 2.5;
 
-    // Outer boundary
+    // Outer Boundary
     ctx.beginPath();
     if (currentMode === 'circle') {
       ctx.arc(0, 0, r, 0, 2 * Math.PI);
-    } else if (currentMode === 'square') {
-      ctx.rect(-r, -r, r * 2, r * 2);
-    } else if (currentMode === 'rect') {
+    } else if (currentMode === 'rect' || currentMode === 'grid') {
       const w = r * guide.aspectRatio;
       ctx.rect(-w, -r, w * 2, r * 2);
     }
     ctx.setLineDash([6, 6]);
     ctx.stroke();
 
-    // Slices
-    if (slices > 1) {
-      ctx.setLineDash([]);
+    // Inner Hole (Mode Donut)
+    if (hasHole && currentMode === 'circle') {
+      ctx.beginPath();
+      ctx.arc(0, 0, innerR, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
 
-      if (currentMode === 'circle') {
-        ctx.beginPath();
-        ctx.arc(0, 0, 4, 0, 2 * Math.PI);
-        ctx.fill();
+    ctx.setLineDash([]);
 
+    // Dibuix de Talls
+    if (currentMode === 'circle') {
+      ctx.beginPath();
+      ctx.arc(0, 0, hasHole ? 3 : 4, 0, 2 * Math.PI);
+      ctx.fill();
+
+      let currentAngle = -Math.PI / 2;
+
+      if (isUnequal && slices > 1) {
+        const vipPct = parseInt(document.getElementById('vip-slice-input').value, 10) / 100;
+        const vipAngle = 2 * Math.PI * vipPct;
+        const remainingAngle = (2 * Math.PI - vipAngle) / (slices - 1);
+
+        for (let i = 0; i < slices; i++) {
+          const startR = hasHole ? innerR : 0;
+          ctx.beginPath();
+          ctx.moveTo(startR * Math.cos(currentAngle), startR * Math.sin(currentAngle));
+          ctx.lineTo(r * Math.cos(currentAngle), r * Math.sin(currentAngle));
+          ctx.stroke();
+
+          // Dibuixar etiquetes d'angle/porció
+          drawAngleTag(currentAngle, r);
+
+          currentAngle += (i === 0) ? vipAngle : remainingAngle;
+        }
+      } else {
         const angleStep = (2 * Math.PI) / slices;
         for (let i = 0; i < slices; i++) {
           const angle = i * angleStep - (Math.PI / 2);
+          const startR = hasHole ? innerR : 0;
           ctx.beginPath();
-          ctx.moveTo(0, 0);
+          ctx.moveTo(startR * Math.cos(angle), startR * Math.sin(angle));
           ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
           ctx.stroke();
-        }
-      } else {
-        const width = currentMode === 'rect' ? r * guide.aspectRatio : r;
-        const left = -width;
-        const top = -r;
-        const wTotal = width * 2;
-        const hTotal = r * 2;
 
-        if (slices === 2) {
-          ctx.beginPath(); ctx.moveTo(0, top); ctx.lineTo(0, top + hTotal); ctx.stroke();
-        } else if (slices === 3) {
-          const step = wTotal / 3;
-          for (let i = 1; i < 3; i++) {
-            ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
-          }
-        } else if (slices === 4) {
-          ctx.beginPath();
-          ctx.moveTo(0, top); ctx.lineTo(0, top + hTotal);
-          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
-          ctx.stroke();
-        } else if (slices === 6) {
-          const stepX = wTotal / 3;
-          for (let i = 1; i < 3; i++) {
-            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
-          }
-          ctx.beginPath(); ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0); ctx.stroke();
-        } else if (slices === 8) {
-          const stepX = wTotal / 4;
-          for (let i = 1; i < 4; i++) {
-            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
-          }
-          ctx.beginPath(); ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0); ctx.stroke();
-        } else if (slices === 9) {
-          const stepX = wTotal / 3;
-          const stepY = hTotal / 3;
-          for (let i = 1; i < 3; i++) {
-            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(left, top + i * stepY); ctx.lineTo(left + wTotal, top + i * stepY); ctx.stroke();
-          }
-        } else {
-          const step = wTotal / slices;
-          for (let i = 1; i < slices; i++) {
-            ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
-          }
+          drawAngleTag(angle, r);
         }
+      }
+    } else if (currentMode === 'grid') {
+      // Dibuix de Retícula (Grid)
+      const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
+      const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
+      const width = r * guide.aspectRatio;
+      const left = -width;
+      const top = -r;
+      const wTotal = width * 2;
+      const hTotal = r * 2;
+
+      // Vertical Grid Lines
+      const stepX = wTotal / cols;
+      for (let i = 1; i < cols; i++) {
+        ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
+      }
+      // Horizontal Grid Lines
+      const stepY = hTotal / rows;
+      for (let j = 1; j < rows; j++) {
+        ctx.beginPath(); ctx.moveTo(left, top + j * stepY); ctx.lineTo(left + wTotal, top + j * stepY); ctx.stroke();
+      }
+    } else {
+      // Mode Rectangle Estàndard
+      const width = r * guide.aspectRatio;
+      const left = -width;
+      const top = -r;
+      const wTotal = width * 2;
+      const hTotal = r * 2;
+
+      const step = wTotal / slices;
+      for (let i = 1; i < slices; i++) {
+        ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
       }
     }
 
+    ctx.restore();
+  }
+
+  // Dibuixa marques visuals de graus al voltant del cercle
+  function drawAngleTag(angleRad, radius) {
+    ctx.save();
+    let deg = Math.round(((angleRad + Math.PI / 2) * 180 / Math.PI) % 360);
+    if (deg < 0) deg += 360;
+
+    const tagRadius = radius + 14;
+    const x = tagRadius * Math.cos(angleRad);
+    const y = tagRadius * Math.sin(angleRad);
+
+    ctx.font = 'bold 10px sans-serif';
+    ctx.fillStyle = lineColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${deg}°`, x, y);
     ctx.restore();
   }
 
