@@ -34,6 +34,8 @@
       height: 100%;
       object-fit: cover;
     }
+
+    /* Capa d'interfície UI amb efecte de fade-out */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -41,8 +43,14 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      padding: clamp(12px, 2vh, 20px);
+      padding: clamp(10px, 2vh, 16px);
       pointer-events: none;
+      transition: opacity 0.5s ease; /* Transició suau */
+      opacity: 1;
+    }
+
+    .ui-layer.idle {
+      opacity: 0; /* S'amaga quan està inactiu */
     }
     
     /* Header Superior */
@@ -51,12 +59,12 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
       pointer-events: auto;
     }
-    .brand {
-      background: rgba(15, 23, 42, 0.65);
+    .brand-pill {
+      background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 6px 14px;
@@ -64,86 +72,83 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
-    .brand h1 {
+    .brand-pill h1 {
       margin: 0;
       font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      background: linear-gradient(135deg, #ff0055, #ff6699);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .angle-badge {
       font-size: 0.7rem;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 2px 8px;
-      border-radius: 12px;
-      color: #94a3b8;
+      color: #cbd5e1;
+      font-weight: 600;
+      opacity: 0.9;
     }
     
     .top-actions {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .action-btn {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 23, 42, 0.7);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 99px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .action-btn:active { transform: scale(0.96); }
+    .action-btn:active { transform: scale(0.95); }
     .action-btn.active {
       background: #ef4444;
       border-color: #f87171;
-      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
     }
 
-    /* Panell Inferior Prim (Optimitzat per Desktop i Mòbil) */
+    /* Panell Inferior Prim */
     .controls-card {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-radius: 24px;
-      padding: 10px 16px;
+      border-radius: 22px;
+      padding: 10px 14px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       pointer-events: auto;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
     }
 
-    /* Modus de tall */
     .selector-group {
       display: flex;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 99px;
       padding: 3px;
       gap: 2px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .mode-btn {
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 14px;
+      padding: 6px 12px;
       font-size: 0.75rem;
       font-weight: 600;
       border-radius: 99px;
@@ -151,24 +156,23 @@
       transition: all 0.2s ease;
     }
     .mode-btn.active {
-      background: #38bdf8;
-      color: #0f172a;
+      background: #ff0055;
+      color: #fff;
       font-weight: 700;
-      box-shadow: 0 2px 12px rgba(56, 189, 248, 0.3);
+      box-shadow: 0 2px 10px rgba(255, 0, 85, 0.4);
     }
 
-    /* Contador de Porcions */
     .slice-control {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 3px 8px;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 2px 6px;
       border-radius: 99px;
     }
     .btn-step {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.08);
@@ -179,22 +183,20 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.2s;
     }
-    .btn-step:active { background: rgba(56, 189, 248, 0.3); }
+    .btn-step:active { background: rgba(255, 0, 85, 0.4); }
     .count-badge {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
-      color: #38bdf8;
-      min-width: 24px;
+      color: #ff0055;
+      min-width: 22px;
       text-align: center;
     }
 
-    /* Eines secundàries (Color i Rotació) */
     .tools-wrapper {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
     }
     .color-picker {
       display: flex;
@@ -215,19 +217,19 @@
     .rotation-control {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       font-size: 0.7rem;
       color: #94a3b8;
     }
     .rotation-control input {
-      width: 70px;
-      accent-color: #38bdf8;
+      width: 65px;
+      accent-color: #ff0055;
       cursor: pointer;
     }
 
     #error-msg {
       position: absolute;
-      top: 70px;
+      top: 65px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(239, 68, 68, 0.95);
@@ -239,19 +241,17 @@
       font-size: 0.8rem;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 600px) {
       .controls-card {
         justify-content: center;
         gap: 8px;
-        padding: 12px;
+        padding: 10px;
       }
       .tools-wrapper {
         width: 100%;
         justify-content: space-between;
         border-top: 1px solid rgba(255, 255, 255, 0.08);
         padding-top: 8px;
-        margin-top: 2px;
       }
     }
   </style>
@@ -264,11 +264,11 @@
 
   <div id="error-msg"></div>
 
-  <div class="ui-layer">
+  <div class="ui-layer" id="ui-layer">
     <div class="top-bar">
-      <div class="brand">
-        <h1>Smart Slicer</h1>
-        <span class="angle-badge" id="angle-info">45°/porció</span>
+      <div class="brand-pill">
+        <h1>Slicer</h1>
+        <span class="angle-badge" id="angle-info">45° (12.5%)</span>
       </div>
       <div class="top-actions">
         <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡</button>
@@ -280,7 +280,7 @@
       <div class="selector-group">
         <button class="mode-btn active" onclick="setMode('circle', this)">Rodona</button>
         <button class="mode-btn" onclick="setMode('square', this)">Quadrat</button>
-        <button class="mode-btn" onclick="setMode('rect', this)">Rectangle</button>
+        <button class="mode-btn" onclick="setMode('rect', this)">Rect.</button>
       </div>
 
       <div class="slice-control">
@@ -291,9 +291,9 @@
 
       <div class="tools-wrapper">
         <div class="color-picker">
-          <div class="color-dot active" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
+          <div class="color-dot active" style="background: #ff0055;" onclick="setColor('#ff0055', this)"></div>
+          <div class="color-dot" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
           <div class="color-dot" style="background: #00ff66;" onclick="setColor('#00ff66', this)"></div>
-          <div class="color-dot" style="background: #ff0055;" onclick="setColor('#ff0055', this)"></div>
           <div class="color-dot" style="background: #ffea00;" onclick="setColor('#ffea00', this)"></div>
         </div>
 
@@ -310,6 +310,7 @@
   const video = document.getElementById('webcam');
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
+  const uiLayer = document.getElementById('ui-layer');
   const sliceCountDisplay = document.getElementById('slice-count');
   const angleInfo = document.getElementById('angle-info');
   const errorMsg = document.getElementById('error-msg');
@@ -319,11 +320,13 @@
 
   let currentMode = 'circle';
   let slices = 8;
-  let lineColor = '#00f2fe';
+  let lineColor = '#ff0055';
   let isFrozen = false;
   let frozenCanvas = null;
   let videoTrack = null;
   let animationFrameId = null;
+  let lastTapTime = 0;
+  let idleTimer = null;
 
   let guide = {
     x: window.innerWidth / 2,
@@ -339,16 +342,35 @@
     initialPinchDist: 0, initialRadius: 0
   };
 
+  // --- CONTROL D'AMAGAR LA INTERFÍCIE (AUTO-HIDE UI) ---
+  function resetIdleTimer() {
+    uiLayer.classList.remove('idle');
+    clearTimeout(idleTimer);
+
+    // Només s'amaga si la imatge NO està congelada
+    if (!isFrozen) {
+      idleTimer = setTimeout(() => {
+        uiLayer.classList.add('idle');
+      }, 3000); // 3 segons d'inactivitat
+    }
+  }
+
+  // Detectar qualsevol interacció per mostrar la interfície i reiniciar el temps
+  ['touchstart', 'mousemove', 'click', 'input'].forEach(evt => {
+    window.addEventListener(evt, resetIdleTimer, { passive: true });
+  });
+
   function vibrate() {
     if (navigator.vibrate) navigator.vibrate(12);
   }
 
   function updateAngleInfo() {
+    const pct = (100 / slices).toFixed(1);
     if (currentMode === 'circle') {
       const angle = (360 / slices).toFixed(1);
-      angleInfo.textContent = `${angle}°/porció`;
+      angleInfo.textContent = `${angle}° (${pct}%)`;
     } else {
-      angleInfo.textContent = `${slices} porcions`;
+      angleInfo.textContent = `${slices} porcions (${pct}%)`;
     }
   }
 
@@ -374,6 +396,11 @@
     lineColor = color;
     document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
     el.classList.add('active');
+    
+    document.querySelectorAll('.mode-btn.active').forEach(b => b.style.background = color);
+    sliceCountDisplay.style.color = color;
+    rotationInput.style.accentColor = color;
+
     drawOverlay();
   }
 
@@ -391,12 +418,15 @@
       const fCtx = frozenCanvas.getContext('2d');
       fCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
       video.pause();
+      clearTimeout(idleTimer);
+      uiLayer.classList.remove('idle'); // Mantenir la UI visible congelat
     } else {
       freezeBtn.classList.remove('active');
       freezeBtn.innerHTML = '📷 Congelar';
       await video.play();
       frozenCanvas = null;
       startLoop();
+      resetIdleTimer();
     }
     drawOverlay();
   }
@@ -440,14 +470,25 @@
 
       await video.play();
       startLoop();
+      resetIdleTimer();
     } catch (err) {
       errorMsg.style.display = 'block';
       errorMsg.textContent = "Accés a la càmera denegat o no disponible.";
     }
   }
 
-  // Touch Events
+  // Doble toc per recentrar
   canvas.addEventListener('touchstart', (e) => {
+    const now = Date.now();
+    if (now - lastTapTime < 300) {
+      guide.x = canvas.width / 2;
+      guide.y = canvas.height / 2;
+      vibrate();
+      drawOverlay();
+      return;
+    }
+    lastTapTime = now;
+
     if (e.touches.length === 1) {
       touchState.isDragging = true;
       touchState.startX = e.touches[0].clientX;
@@ -482,7 +523,7 @@
 
   canvas.addEventListener('touchend', () => { touchState.isDragging = false; });
 
-  // Render Loop
+  // Bucle de dibuix
   function startLoop() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     function loop() {
@@ -509,7 +550,7 @@
     ctx.rotate(rotationRad);
 
     ctx.shadowColor = lineColor;
-    ctx.shadowBlur = 10;
+    ctx.shadowBlur = 12;
     ctx.strokeStyle = lineColor;
     ctx.fillStyle = lineColor;
     ctx.lineWidth = 2.5;
