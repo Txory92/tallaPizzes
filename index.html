@@ -2,21 +2,29 @@
 <html lang="ca">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Tallador de Pizza i Truites</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Smart Slicer - Tallador de Pizza i Truites</title>
   <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: #000;
       color: #fff;
     }
-    #container {
+    #app {
       position: relative;
       width: 100vw;
       height: 100vh;
+      height: 100dvh; /* Altura dinàmica per a mòbils */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     video, canvas {
       position: absolute;
@@ -26,56 +34,180 @@
       height: 100%;
       object-fit: cover;
     }
-    #controls {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.85);
-      padding: 12px 24px;
-      border-radius: 30px;
+    /* Capa d'interfície */
+    .ui-layer {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+      pointer-events: none;
+    }
+    .header {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 12px 20px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      align-self: center;
+      text-align: center;
+      pointer-events: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .status-badge {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 2px;
+      display: block;
+    }
+    /* Targeta de controls inferior */
+    .controls-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 28px;
+      padding: 18px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      pointer-events: auto;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .selector-group {
+      display: flex;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 8px 0;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 11px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .mode-btn.active {
+      background: #38bdf8;
+      color: #0f172a;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+    }
+    .slider-row {
       display: flex;
       align-items: center;
-      gap: 15px;
-      z-index: 10;
-      border: 1px solid rgba(255,255,255,0.2);
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      min-width: 50px;
+    }
+    .slider-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
     }
     input[type=range] {
-      width: 130px;
+      -webkit-appearance: none;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      height: 6px;
+      border-radius: 3px;
+      outline: none;
     }
-    span {
-      font-weight: bold;
-      font-size: 1.2rem;
-      min-width: 20px;
-      text-align: center;
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+    .count-badge {
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 1.1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     #error-msg {
       position: absolute;
-      top: 20px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255, 0, 0, 0.8);
+      background: rgba(239, 68, 68, 0.9);
       color: white;
-      padding: 10px 20px;
-      border-radius: 8px;
+      padding: 10px 18px;
+      border-radius: 12px;
       display: none;
-      z-index: 20;
+      z-index: 30;
+      font-size: 0.85rem;
       text-align: center;
-      width: 80%;
+      max-width: 85%;
     }
   </style>
+  <!-- Carrega OpenCV.js per a detecció de formes -->
+  <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady()"></script>
 </head>
 <body>
 
-<div id="container">
-  <div id="error-msg"></div>
+<div id="app">
   <video id="webcam" autoplay playsinline muted></video>
   <canvas id="overlay"></canvas>
+  <canvas id="cvCanvas" style="display:none;"></canvas>
 
-  <div id="controls">
-    <label for="slices">Talls:</label>
-    <input type="range" id="slices" min="1" max="10" value="8">
-    <span id="slice-count">8</span>
+  <div id="error-msg"></div>
+
+  <div class="ui-layer">
+    <div class="header">
+      <h1>Smart Slicer</h1>
+      <span id="status" class="status-badge">Carregant visió per computador...</span>
+    </div>
+
+    <div class="controls-card">
+      <div class="selector-group">
+        <button class="mode-btn active" onclick="setMode('auto')">Auto</button>
+        <button class="mode-btn" onclick="setMode('circle')">Cercle</button>
+        <button class="mode-btn" onclick="setMode('square')">Quadrat</button>
+      </div>
+
+      <div class="slider-row">
+        <span class="label">Talls</span>
+        <div class="slider-container">
+          <input type="range" id="slices" min="1" max="10" value="8">
+        </div>
+        <div class="count-badge" id="slice-count">8</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -83,87 +215,182 @@
   const video = document.getElementById('webcam');
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
+  const cvCanvas = document.getElementById('cvCanvas');
+  const cvCtx = cvCanvas.getContext('2d');
   const slider = document.getElementById('slices');
   const sliceCountDisplay = document.getElementById('slice-count');
+  const statusBadge = document.getElementById('status');
   const errorMsg = document.getElementById('error-msg');
+
+  let currentMode = 'auto'; // 'auto', 'circle', 'square'
+  let isOpenCvReady = false;
+
+  // Dades de la forma detectada/manual
+  let targetShape = {
+    x: 0,
+    y: 0,
+    radius: 0,
+    width: 0,
+    height: 0,
+    type: 'circle'
+  };
+
+  function onOpenCvReady() {
+    isOpenCvReady = true;
+    statusBadge.textContent = "Detecció automàtica activa";
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+
+    if (mode !== 'auto') {
+      statusBadge.textContent = `Mode Manual (${mode === 'circle' ? 'Cercle' : 'Quadrat'})`;
+    } else {
+      statusBadge.textContent = isOpenCvReady ? "Detecció automàtica activa" : "Carregant OpenCV...";
+    }
+  }
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    cvCanvas.width = 320; // Resolució optimitzada per al processament
+    cvCanvas.height = 320 * (window.innerHeight / window.innerWidth);
   }
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  function showError(msg) {
-    errorMsg.style.display = 'block';
-    errorMsg.textContent = msg;
-  }
-
-  // Sol·licitar accés a la càmera de forma compatible amb mòbils
   async function startCamera() {
-    const constraintsOptions = [
-      { video: { facingMode: { ideal: "environment" } } }, // Intentar càmera posterior
-      { video: true }                                     // Qualsevol càmera com a alternativa
-    ];
-
-    for (const constraints of constraintsOptions) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        video.srcObject = stream;
-        video.play();
-        return;
-      } catch (err) {
-        console.warn("Error amb configuració:", constraints, err);
-      }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      video.srcObject = stream;
+      video.play();
+    } catch (err) {
+      errorMsg.style.display = 'block';
+      errorMsg.textContent = "Accés a la càmera denegat o no disponible. Utilitza HTTPS.";
     }
-
-    showError("No s'ha pogut accedir a la càmera. Assegura't de fer servir HTTPS i haver donat permisos al navegador.");
   }
 
-  function drawGuide() {
+  // Detecció per visió artificial
+  function detectObject() {
+    if (!isOpenCvReady || currentMode !== 'auto' || video.readyState !== 4) return;
+
+    try {
+      cvCtx.drawImage(video, 0, 0, cvCanvas.width, cvCanvas.height);
+      let src = cv.imread(cvCanvas);
+      let gray = new cv.Mat();
+      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+      cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0);
+
+      // Cercar cercles (pizzes/truites)
+      let circles = new cv.Mat();
+      cv.HoughCircles(gray, circles, cv.HOUGH_GRADIENT, 1, 40, 70, 30, 30, 150);
+
+      const scaleX = canvas.width / cvCanvas.width;
+      const scaleY = canvas.height / cvCanvas.height;
+
+      if (circles.cols > 0) {
+        let x = circles.data32F[0] * scaleX;
+        let y = circles.data32F[1] * scaleY;
+        let r = circles.data32F[2] * Math.min(scaleX, scaleY);
+
+        // Suavitzat de moviment
+        targetShape.x += (x - targetShape.x) * 0.2;
+        targetShape.y += (y - targetShape.y) * 0.2;
+        targetShape.radius += (r - targetShape.radius) * 0.2;
+        targetShape.type = 'circle';
+      }
+
+      src.delete(); gray.delete(); circles.delete();
+    } catch (e) {
+      // Ignorar errors puntuals de frame
+    }
+  }
+
+  function drawOverlay() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) * 0.65;
     const numSlices = parseInt(slider.value, 10);
-
     sliceCountDisplay.textContent = numSlices;
 
-    // Cercle exterior
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+    let radius = Math.min(centerX, centerY) * 0.6;
+    let shapeType = currentMode === 'square' ? 'square' : 'circle';
+
+    if (currentMode === 'auto' && targetShape.radius > 20) {
+      centerX = targetShape.x;
+      centerY = targetShape.y;
+      radius = targetShape.radius;
+      shapeType = targetShape.type;
+    }
+
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 242, 254, 0.6)';
+    ctx.shadowBlur = 12;
+
+    // Dibuixar la guia de la forma
     ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = '#00ffcc';
+    if (shapeType === 'circle') {
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    } else {
+      ctx.rect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+    }
+    ctx.strokeStyle = '#00f2fe';
     ctx.lineWidth = 3;
-    ctx.setLineDash([8, 8]);
+    ctx.setLineDash([8, 6]);
     ctx.stroke();
 
-    // Punt central
+    // Dibuixar centre
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
     ctx.fillStyle = '#ff0055';
     ctx.fill();
 
-    // Línies de tall
+    // Dibuixar línies de tall
     if (numSlices > 1) {
-      const angleStep = (2 * Math.PI) / numSlices;
       ctx.setLineDash([]);
       ctx.strokeStyle = '#ff0055';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2.5;
 
-      for (let i = 0; i < numSlices; i++) {
-        const angle = i * angleStep - (Math.PI / 2);
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
+      if (shapeType === 'circle') {
+        const angleStep = (2 * Math.PI) / numSlices;
+        for (let i = 0; i < numSlices; i++) {
+          const angle = i * angleStep - (Math.PI / 2);
+          const x = centerX + radius * Math.cos(angle);
+          const y = centerY + radius * Math.sin(angle);
 
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(x, y);
-        ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(centerX, centerY);
+          ctx.lineTo(x, y);
+          ctx.stroke();
+        }
+      } else {
+        // Talls per a formes quadrades (llores / reixeta)
+        const cols = Math.ceil(Math.sqrt(numSlices));
+        const step = (radius * 2) / cols;
+        for (let i = 1; i < cols; i++) {
+          // Línies verticals
+          ctx.beginPath();
+          ctx.moveTo(centerX - radius + i * step, centerY - radius);
+          ctx.lineTo(centerX - radius + i * step, centerY + radius);
+          ctx.stroke();
+          // Línies horitzontals
+          ctx.beginPath();
+          ctx.moveTo(centerX - radius, centerY - radius + i * step);
+          ctx.lineTo(centerX + radius, centerY - radius + i * step);
+          ctx.stroke();
+        }
       }
     }
 
-    requestAnimationFrame(drawGuide);
+    ctx.restore();
+
+    detectObject();
+    requestAnimationFrame(drawOverlay);
   }
 
   slider.addEventListener('input', () => {
@@ -171,7 +398,7 @@
   });
 
   startCamera();
-  drawGuide();
+  drawOverlay();
 </script>
 
 </body>
