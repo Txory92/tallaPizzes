@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Smart Slicer Ultra</title>
 
-  <!-- PWA Manifest Inline via Data URL -->
+  <!-- PWA Manifest Inline -->
   <link rel="manifest" href='data:application/manifest+json,{"name":"Smart Slicer Ultra","short_name":"Slicer","start_url":".","display":"standalone","background_color":"#090d16","theme_color":"#090d16","icons":[{"src":"https://fav.farm/🍕","sizes":"512x512","type":"image/png"}]}'>
 
   <style>
@@ -50,9 +50,9 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      padding: clamp(10px, 2vh, 16px);
+      padding: calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 12px) 12px;
       pointer-events: none;
-      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.4s ease;
       opacity: 1;
     }
 
@@ -60,30 +60,34 @@
       opacity: 0;
     }
     
-    /* Header Superior */
+    /* Header Superior Adaptatiu */
     .top-bar {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
-      pointer-events: auto;
+      gap: 8px;
     }
+
     .brand-pill {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 99px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       align-items: center;
       gap: 6px;
+      shrink: 0;
+      pointer-events: auto;
+      white-space: nowrap;
     }
     .brand-pill h1 {
       margin: 0;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
       letter-spacing: 0.3px;
       background: linear-gradient(135deg, #ff0055, #ff6699);
@@ -91,63 +95,73 @@
       -webkit-text-fill-color: transparent;
     }
     .angle-badge {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #cbd5e1;
       font-weight: 600;
-      opacity: 0.9;
     }
     
     .top-actions {
       display: flex;
       gap: 6px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      pointer-events: auto;
+      padding: 2px 0;
     }
+    .top-actions::-webkit-scrollbar {
+      display: none;
+    }
+
     .action-btn {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 6px 12px;
+      padding: 6px 10px;
       border-radius: 99px;
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
       transition: all 0.2s ease;
     }
     .action-btn:active { transform: scale(0.95); }
     .action-btn.active {
-      background: #ef4444;
-      border-color: #f87171;
-      box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+      background: #ff0055;
+      border-color: #ff6699;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
     }
 
     /* Panell Inferior Principal */
     .controls-container {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
       pointer-events: auto;
     }
 
-    /* Sub-barres d'opcions contextuals (dinàmiques) */
     .sub-bar {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 6px 12px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      gap: 10px;
-      font-size: 0.75rem;
+      gap: 8px;
+      font-size: 0.72rem;
       animation: fadeIn 0.2s ease;
     }
 
@@ -164,13 +178,13 @@
       gap: 6px;
     }
 
-    .sub-bar select, .sub-bar input[type="range"] {
+    .sub-bar select, .sub-bar input[type="number"], .sub-bar input[type="range"] {
       background: rgba(0, 0, 0, 0.4);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 8px;
-      padding: 3px 8px;
-      font-size: 0.75rem;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.72rem;
       outline: none;
     }
 
@@ -178,15 +192,15 @@
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border-radius: 22px;
-      padding: 10px 14px;
+      border-radius: 20px;
+      padding: 8px 12px;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
 
     .selector-group {
@@ -200,8 +214,8 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 6px 10px;
-      font-size: 0.75rem;
+      padding: 5px 10px;
+      font-size: 0.72rem;
       font-weight: 600;
       border-radius: 99px;
       cursor: pointer;
@@ -211,25 +225,25 @@
       background: #ff0055;
       color: #fff;
       font-weight: 700;
-      box-shadow: 0 2px 10px rgba(255, 0, 85, 0.4);
+      box-shadow: 0 2px 8px rgba(255, 0, 85, 0.4);
     }
 
     .slice-control {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       background: rgba(0, 0, 0, 0.25);
       padding: 2px 6px;
       border-radius: 99px;
     }
     .btn-step {
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(255, 255, 255, 0.08);
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -238,10 +252,10 @@
     }
     .btn-step:active { background: rgba(255, 0, 85, 0.4); }
     .count-badge {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: #ff0055;
-      min-width: 20px;
+      min-width: 18px;
       text-align: center;
     }
 
@@ -264,40 +278,40 @@
     }
     .color-dot.active {
       border-color: #fff;
-      transform: scale(1.2);
+      transform: scale(1.15);
     }
     .rotation-control {
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: #94a3b8;
     }
     .rotation-control input {
-      width: 55px;
+      width: 50px;
       accent-color: #ff0055;
       cursor: pointer;
     }
 
     #error-msg {
       position: absolute;
-      top: 65px;
+      top: 60px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(239, 68, 68, 0.95);
       color: white;
-      padding: 8px 16px;
-      border-radius: 12px;
+      padding: 6px 14px;
+      border-radius: 10px;
       display: none;
       z-index: 30;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
     }
 
     @media (max-width: 600px) {
       .controls-card {
         justify-content: center;
-        gap: 8px;
-        padding: 8px 10px;
+        gap: 6px;
+        padding: 8px;
       }
       .tools-wrapper {
         width: 100%;
@@ -321,9 +335,10 @@
     <div class="top-bar">
       <div class="brand-pill">
         <h1>Slicer</h1>
-        <span class="angle-badge" id="angle-info">45° (12.5%)</span>
+        <span class="angle-badge" id="angle-info">45°</span>
       </div>
       <div class="top-actions">
+        <button id="show-degrees-btn" class="action-btn" onclick="toggleDegrees()">º Graus</button>
         <button id="hole-btn" class="action-btn" onclick="toggleHole()">🍩 Forat</button>
         <button id="unequal-btn" class="action-btn" onclick="toggleUnequal()">📐 Asimètric</button>
         <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡</button>
@@ -337,15 +352,15 @@
       <!-- Sub-barra per al Mode Donut / Forat -->
       <div class="sub-bar" id="subbar-hole" style="display:none;">
         <label>
-          Mida Forat Interior:
+          Forat interior:
           <input type="range" id="inner-radius-input" min="0.1" max="0.7" step="0.05" value="0.3" oninput="drawOverlay()">
         </label>
       </div>
 
-      <!-- Sub-barra per al Mode Asimètric (Porció VIP) -->
+      <!-- Sub-barra per al Mode Asimètric -->
       <div class="sub-bar" id="subbar-unequal" style="display:none;">
         <label>
-          Mida Porció Gran:
+          Porció Gran:
           <input type="range" id="vip-slice-input" min="15" max="50" step="5" value="30" oninput="updateAngleInfo(); drawOverlay();">
           <span id="vip-percent-label" style="color:#ff0055; font-weight:bold;">30%</span>
         </label>
@@ -355,21 +370,21 @@
       <div class="sub-bar" id="subbar-rect" style="display:none;">
         <label>Proporció:
           <select id="aspect-ratio-select" onchange="updateAspectRatio()">
-            <option value="1.333">4:3 (Llauna/Pa)</option>
-            <option value="1.777">16:9 (Panet Llarg)</option>
+            <option value="1.333">4:3 (Pa/Llauna)</option>
+            <option value="1.777">16:9 (Llarg)</option>
             <option value="2.0">2:1 (Bandeja)</option>
             <option value="1.0">1:1 (Quadrat)</option>
           </select>
         </label>
       </div>
 
-      <!-- Sub-barra per al Mode Retícula / Grid -->
+      <!-- Sub-barra per al Mode Grid -->
       <div class="sub-bar" id="subbar-grid" style="display:none;">
         <label>Files:
-          <input type="number" id="grid-rows" min="1" max="10" value="3" style="width:45px;" onchange="drawOverlay()">
+          <input type="number" id="grid-rows" min="1" max="10" value="3" style="width:40px;" onchange="drawOverlay()">
         </label>
-        <label>Columnes:
-          <input type="number" id="grid-cols" min="1" max="10" value="4" style="width:45px;" onchange="drawOverlay()">
+        <label>Cols:
+          <input type="number" id="grid-cols" min="1" max="10" value="4" style="width:40px;" onchange="drawOverlay()">
         </label>
       </div>
 
@@ -417,6 +432,7 @@
   const torchBtn = document.getElementById('torch-btn');
   const holeBtn = document.getElementById('hole-btn');
   const unequalBtn = document.getElementById('unequal-btn');
+  const showDegreesBtn = document.getElementById('show-degrees-btn');
   const rotationInput = document.getElementById('rotation');
 
   let currentMode = 'circle';
@@ -425,6 +441,7 @@
   let isFrozen = false;
   let hasHole = false;
   let isUnequal = false;
+  let showDegrees = false; // Per defecte DESACTIVAT
   let frozenCanvas = null;
   let videoTrack = null;
   let animationFrameId = null;
@@ -445,10 +462,10 @@
     initialPinchDist: 0, initialRadius: 0
   };
 
-  // --- REGISTRE PWA SERVICE WORKER (OFFLINE) ---
+  // --- SERVICE WORKER PWA ---
   if ('serviceWorker' in navigator) {
     const swCode = `
-      const CACHE_NAME = 'slicer-v1';
+      const CACHE_NAME = 'slicer-v2';
       self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./']))));
       self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
     `;
@@ -456,7 +473,7 @@
     navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
   }
 
-  // --- AUTO-HIDE UI ---
+  // --- AUTO-HIDE INTERFÍCIE ---
   function resetIdleTimer() {
     uiLayer.classList.remove('idle');
     clearTimeout(idleTimer);
@@ -473,6 +490,13 @@
 
   function vibrate() {
     if (navigator.vibrate) navigator.vibrate(12);
+  }
+
+  function toggleDegrees() {
+    vibrate();
+    showDegrees = !showDegrees;
+    showDegreesBtn.classList.toggle('active', showDegrees);
+    drawOverlay();
   }
 
   function toggleHole() {
@@ -501,7 +525,7 @@
     if (currentMode === 'grid') {
       const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
       const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
-      angleInfo.textContent = `${rows}x${cols} (${rows * cols} porcions)`;
+      angleInfo.textContent = `${rows}x${cols} (${rows * cols})`;
       return;
     }
 
@@ -509,7 +533,7 @@
       const vipPct = parseInt(document.getElementById('vip-slice-input').value, 10);
       document.getElementById('vip-percent-label').textContent = `${vipPct}%`;
       const remainingPct = ((100 - vipPct) / (slices - 1)).toFixed(1);
-      angleInfo.textContent = `1x ${vipPct}% + ${slices - 1}x ${remainingPct}%`;
+      angleInfo.textContent = `1x${vipPct}% + ${slices - 1}x${remainingPct}%`;
       return;
     }
 
@@ -518,7 +542,7 @@
       const angle = (360 / slices).toFixed(1);
       angleInfo.textContent = `${angle}° (${pct}%)`;
     } else {
-      angleInfo.textContent = `${slices} porcions (${pct}%)`;
+      angleInfo.textContent = `${slices} p. (${pct}%)`;
     }
   }
 
@@ -563,7 +587,7 @@
 
     if (isFrozen) {
       freezeBtn.classList.add('active');
-      freezeBtn.innerHTML = '▶ Descongelar';
+      freezeBtn.innerHTML = '▶ Actiu';
       
       frozenCanvas = document.createElement('canvas');
       frozenCanvas.width = canvas.width;
@@ -598,10 +622,12 @@
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    if (!touchState.isDragging) {
-      guide.x = canvas.width / 2;
-      guide.y = canvas.height / 2;
-    }
+    
+    // Mantenir la guia sempre dins dels marges visibles
+    guide.radius = Math.max(40, Math.min(Math.min(canvas.width, canvas.height) * 0.4, guide.radius));
+    guide.x = Math.max(guide.radius, Math.min(canvas.width - guide.radius, guide.x));
+    guide.y = Math.max(guide.radius, Math.min(canvas.height - guide.radius, guide.y));
+
     drawOverlay();
   }
   window.addEventListener('resize', resizeCanvas);
@@ -626,7 +652,7 @@
     }
   }
 
-  // Interacció Tàctil
+  // Interacció Tàctil Segura (Fix del Zoom bug)
   canvas.addEventListener('touchstart', (e) => {
     const now = Date.now();
     if (now - lastTapTime < 300) {
@@ -646,27 +672,40 @@
       touchState.initialGuideY = guide.y;
     } else if (e.touches.length === 2) {
       touchState.isDragging = false;
-      touchState.initialPinchDist = Math.hypot(
+      const dist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
+      touchState.initialPinchDist = dist > 0 ? dist : 1;
       touchState.initialRadius = guide.radius;
     }
   });
 
   canvas.addEventListener('touchmove', (e) => {
     if (touchState.isDragging && e.touches.length === 1) {
-      guide.x = touchState.initialGuideX + (e.touches[0].clientX - touchState.startX);
-      guide.y = touchState.initialGuideY + (e.touches[0].clientY - touchState.startY);
+      let nextX = touchState.initialGuideX + (e.touches[0].clientX - touchState.startX);
+      let nextY = touchState.initialGuideY + (e.touches[0].clientY - touchState.startY);
+
+      // Limitar per no sortir de la pantalla
+      const margin = 20;
+      guide.x = Math.max(margin, Math.min(canvas.width - margin, nextX));
+      guide.y = Math.max(margin, Math.min(canvas.height - margin, nextY));
+
       drawOverlay();
     } else if (e.touches.length === 2) {
       const currentDist = Math.hypot(
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      const factor = currentDist / touchState.initialPinchDist;
-      guide.radius = Math.max(30, Math.min(canvas.width * 0.8, touchState.initialRadius * factor));
-      drawOverlay();
+
+      if (touchState.initialPinchDist > 0) {
+        const factor = currentDist / touchState.initialPinchDist;
+        const minAllowed = 40; // Ràdi mínim absolut
+        const maxAllowed = Math.min(canvas.width, canvas.height) * 0.45; // Radi màxim absolut
+
+        guide.radius = Math.max(minAllowed, Math.min(maxAllowed, touchState.initialRadius * factor));
+        drawOverlay();
+      }
     }
   });
 
@@ -692,7 +731,7 @@
     }
 
     const rotationRad = (parseInt(rotationInput.value, 10) * Math.PI) / 180;
-    const r = guide.radius;
+    const r = Math.max(30, guide.radius); // Seguretat addicional per no dibuixar r<=0
     const innerRRatio = parseFloat(document.getElementById('inner-radius-input').value);
     const innerR = r * innerRRatio;
 
@@ -746,9 +785,7 @@
           ctx.lineTo(r * Math.cos(currentAngle), r * Math.sin(currentAngle));
           ctx.stroke();
 
-          // Dibuixar etiquetes d'angle/porció
-          drawAngleTag(currentAngle, r);
-
+          if (showDegrees) drawAngleTag(currentAngle, r);
           currentAngle += (i === 0) ? vipAngle : remainingAngle;
         }
       } else {
@@ -761,57 +798,70 @@
           ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
           ctx.stroke();
 
-          drawAngleTag(angle, r);
+          if (showDegrees) drawAngleTag(angle, r);
         }
       }
     } else if (currentMode === 'grid') {
-      // Dibuix de Retícula (Grid)
+      // Grid Personalitzat
       const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
       const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
-      const width = r * guide.aspectRatio;
-      const left = -width;
-      const top = -r;
-      const wTotal = width * 2;
-      const hTotal = r * 2;
+      drawGrid(r, rows, cols);
+    } else if (currentMode === 'rect') {
+      // Mode Rectangle Intel·ligent (Grid segons nombre de porcions)
+      let rows = 1;
+      let cols = slices;
 
-      // Vertical Grid Lines
-      const stepX = wTotal / cols;
-      for (let i = 1; i < cols; i++) {
-        ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
-      }
-      // Horizontal Grid Lines
-      const stepY = hTotal / rows;
-      for (let j = 1; j < rows; j++) {
-        ctx.beginPath(); ctx.moveTo(left, top + j * stepY); ctx.lineTo(left + wTotal, top + j * stepY); ctx.stroke();
-      }
-    } else {
-      // Mode Rectangle Estàndard
-      const width = r * guide.aspectRatio;
-      const left = -width;
-      const top = -r;
-      const wTotal = width * 2;
-      const hTotal = r * 2;
+      if (slices === 4) { rows = 2; cols = 2; }
+      else if (slices === 6) { rows = 2; cols = 3; }
+      else if (slices === 8) { rows = 2; cols = 4; }
+      else if (slices === 9) { rows = 3; cols = 3; }
+      else if (slices === 10) { rows = 2; cols = 5; }
+      else if (slices === 12) { rows = 3; cols = 4; }
+      else if (slices === 15) { rows = 3; cols = 5; }
+      else if (slices === 16) { rows = 4; cols = 4; }
 
-      const step = wTotal / slices;
-      for (let i = 1; i < slices; i++) {
-        ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
-      }
+      drawGrid(r, rows, cols);
     }
 
     ctx.restore();
   }
 
-  // Dibuixa marques visuals de graus al voltant del cercle
+  // Dibuixa retícules de forma neta
+  function drawGrid(r, rows, cols) {
+    const width = r * guide.aspectRatio;
+    const left = -width;
+    const top = -r;
+    const wTotal = width * 2;
+    const hTotal = r * 2;
+
+    const stepX = wTotal / cols;
+    for (let i = 1; i < cols; i++) {
+      ctx.beginPath();
+      ctx.moveTo(left + i * stepX, top);
+      ctx.lineTo(left + i * stepX, top + hTotal);
+      ctx.stroke();
+    }
+
+    const stepY = hTotal / rows;
+    for (let j = 1; j < rows; j++) {
+      ctx.beginPath();
+      ctx.moveTo(left, top + j * stepY);
+      ctx.lineTo(left + wTotal, top + j * stepY);
+      ctx.stroke();
+    }
+  }
+
+  // Dibuixa marques visuals de graus (Només quan està activat)
   function drawAngleTag(angleRad, radius) {
     ctx.save();
     let deg = Math.round(((angleRad + Math.PI / 2) * 180 / Math.PI) % 360);
     if (deg < 0) deg += 360;
 
-    const tagRadius = radius + 14;
+    const tagRadius = radius + 12;
     const x = tagRadius * Math.cos(angleRad);
     const y = tagRadius * Math.sin(angleRad);
 
-    ctx.font = 'bold 10px sans-serif';
+    ctx.font = 'bold 9px -apple-system, sans-serif';
     ctx.fillStyle = lineColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
