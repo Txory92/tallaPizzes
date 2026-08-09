@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Smart Slicer PRO - Tallador de Pizza i Truites</title>
+  <title>Smart Slicer Ultra</title>
   <style>
     * {
       box-sizing: border-box;
@@ -14,8 +14,8 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background: #090d16;
       color: #fff;
     }
     #app {
@@ -34,7 +34,6 @@
       height: 100%;
       object-fit: cover;
     }
-    /* Capa d'interfície UI */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -42,183 +41,218 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+      padding: clamp(12px, 2vh, 20px);
       pointer-events: none;
     }
+    
+    /* Header Superior */
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
       pointer-events: auto;
     }
-    .header {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 8px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    .brand {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 6px 14px;
+      border-radius: 99px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .header h1 {
+    .brand h1 {
       margin: 0;
-      font-size: 1rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .angle-badge {
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 12px;
+      color: #94a3b8;
+    }
+    
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
     .action-btn {
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s ease;
     }
+    .action-btn:active { transform: scale(0.96); }
     .action-btn.active {
       background: #ef4444;
       border-color: #f87171;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
     }
-    /* Targeta de controls inferior */
+
+    /* Panell Inferior Prim (Optimitzat per Desktop i Mòbil) */
     .controls-card {
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 28px;
-      padding: 14px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 24px;
+      padding: 10px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       pointer-events: auto;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
       width: 100%;
-      max-width: 400px;
+      max-width: 800px;
       margin: 0 auto;
     }
+
+    /* Modus de tall */
     .selector-group {
       display: flex;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 99px;
       padding: 3px;
-      gap: 3px;
+      gap: 2px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .mode-btn {
-      flex: 1;
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 8px 0;
-      font-size: 0.8rem;
-      font-weight: 700;
-      border-radius: 11px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 99px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
     .mode-btn.active {
       background: #38bdf8;
       color: #0f172a;
-      box-shadow: 0 2px 10px rgba(56, 189, 248, 0.4);
+      font-weight: 700;
+      box-shadow: 0 2px 12px rgba(56, 189, 248, 0.3);
     }
-    .slice-control-row {
+
+    /* Contador de Porcions */
+    .slice-control {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 3px 8px;
+      border-radius: 99px;
     }
     .btn-step {
-      width: 42px;
-      height: 42px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: background 0.2s;
     }
-    .btn-step:active {
-      background: rgba(56, 189, 248, 0.4);
-    }
-    .slice-display {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    .btn-step:active { background: rgba(56, 189, 248, 0.3); }
     .count-badge {
-      font-size: 1.8rem;
-      font-weight: 900;
+      font-size: 1.1rem;
+      font-weight: 800;
       color: #38bdf8;
-      line-height: 1;
+      min-width: 24px;
+      text-align: center;
     }
-    .count-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #94a3b8;
-      margin-top: 2px;
-    }
-    .tool-row {
+
+    /* Eines secundàries (Color i Rotació) */
+    .tools-wrapper {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 10px;
+      gap: 16px;
     }
     .color-picker {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     .color-dot {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 2px solid transparent;
       cursor: pointer;
+      transition: transform 0.2s;
     }
     .color-dot.active {
       border-color: #fff;
-      transform: scale(1.15);
+      transform: scale(1.2);
     }
     .rotation-control {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: #94a3b8;
     }
     .rotation-control input {
-      width: 80px;
+      width: 70px;
       accent-color: #38bdf8;
+      cursor: pointer;
     }
+
     #error-msg {
       position: absolute;
-      top: 80px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(239, 68, 68, 0.9);
+      background: rgba(239, 68, 68, 0.95);
       color: white;
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-radius: 12px;
       display: none;
       z-index: 30;
-      font-size: 0.85rem;
-      text-align: center;
-      max-width: 85%;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      .controls-card {
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+      }
+      .tools-wrapper {
+        width: 100%;
+        justify-content: space-between;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding-top: 8px;
+        margin-top: 2px;
+      }
     }
   </style>
 </head>
@@ -232,31 +266,30 @@
 
   <div class="ui-layer">
     <div class="top-bar">
-      <div class="header">
+      <div class="brand">
         <h1>Smart Slicer</h1>
+        <span class="angle-badge" id="angle-info">45°/porció</span>
       </div>
-      <button id="freeze-btn" class="action-btn" onclick="toggleFreeze()">
-        📷 Congelar
-      </button>
+      <div class="top-actions">
+        <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡</button>
+        <button id="freeze-btn" class="action-btn" onclick="toggleFreeze()">📷 Congelar</button>
+      </div>
     </div>
 
     <div class="controls-card">
       <div class="selector-group">
-        <button class="mode-btn active" onclick="setMode('circle')">Rodona</button>
-        <button class="mode-btn" onclick="setMode('square')">Quadrat</button>
-        <button class="mode-btn" onclick="setMode('rect')">Rectangle</button>
+        <button class="mode-btn active" onclick="setMode('circle', this)">Rodona</button>
+        <button class="mode-btn" onclick="setMode('square', this)">Quadrat</button>
+        <button class="mode-btn" onclick="setMode('rect', this)">Rectangle</button>
       </div>
 
-      <div class="slice-control-row">
+      <div class="slice-control">
         <button class="btn-step" onclick="changeSlices(-1)">−</button>
-        <div class="slice-display">
-          <span class="count-badge" id="slice-count">8</span>
-          <span class="count-label">Porcions</span>
-        </div>
+        <span class="count-badge" id="slice-count">8</span>
         <button class="btn-step" onclick="changeSlices(1)">+</button>
       </div>
 
-      <div class="tool-row">
+      <div class="tools-wrapper">
         <div class="color-picker">
           <div class="color-dot active" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
           <div class="color-dot" style="background: #00ff66;" onclick="setColor('#00ff66', this)"></div>
@@ -265,7 +298,7 @@
         </div>
 
         <div class="rotation-control">
-          <span>Gira:</span>
+          <span>Gira</span>
           <input type="range" id="rotation" min="0" max="360" value="0" oninput="drawOverlay()">
         </div>
       </div>
@@ -278,8 +311,10 @@
   const canvas = document.getElementById('overlay');
   const ctx = canvas.getContext('2d');
   const sliceCountDisplay = document.getElementById('slice-count');
+  const angleInfo = document.getElementById('angle-info');
   const errorMsg = document.getElementById('error-msg');
   const freezeBtn = document.getElementById('freeze-btn');
+  const torchBtn = document.getElementById('torch-btn');
   const rotationInput = document.getElementById('rotation');
 
   let currentMode = 'circle';
@@ -287,42 +322,50 @@
   let lineColor = '#00f2fe';
   let isFrozen = false;
   let frozenCanvas = null;
+  let videoTrack = null;
+  let animationFrameId = null;
 
-  // Estat de la guia (Posició i mida ajustable amb gestos)
   let guide = {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
-    radius: Math.min(window.innerWidth, window.innerHeight) * 0.3,
-    aspectRatio: 1.4 // Per al mode rectangle
+    radius: Math.min(window.innerWidth, window.innerHeight) * 0.28,
+    aspectRatio: 1.4
   };
 
-  // Control de gestos tàctils
   let touchState = {
     isDragging: false,
-    startX: 0,
-    startY: 0,
-    initialGuideX: 0,
-    initialGuideY: 0,
-    initialPinchDist: 0,
-    initialRadius: 0
+    startX: 0, startY: 0,
+    initialGuideX: 0, initialGuideY: 0,
+    initialPinchDist: 0, initialRadius: 0
   };
 
   function vibrate() {
-    if (navigator.vibrate) navigator.vibrate(15);
+    if (navigator.vibrate) navigator.vibrate(12);
   }
 
-  function setMode(mode) {
+  function updateAngleInfo() {
+    if (currentMode === 'circle') {
+      const angle = (360 / slices).toFixed(1);
+      angleInfo.textContent = `${angle}°/porció`;
+    } else {
+      angleInfo.textContent = `${slices} porcions`;
+    }
+  }
+
+  function setMode(mode, el) {
     vibrate();
     currentMode = mode;
     document.querySelectorAll('.selector-group .mode-btn').forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    el.classList.add('active');
+    updateAngleInfo();
     drawOverlay();
   }
 
   function changeSlices(delta) {
     vibrate();
-    slices = Math.min(10, Math.max(1, slices + delta));
+    slices = Math.min(12, Math.max(1, slices + delta));
     sliceCountDisplay.textContent = slices;
+    updateAngleInfo();
     drawOverlay();
   }
 
@@ -334,13 +377,14 @@
     drawOverlay();
   }
 
-  function toggleFreeze() {
+  async function toggleFreeze() {
     vibrate();
     isFrozen = !isFrozen;
+
     if (isFrozen) {
       freezeBtn.classList.add('active');
       freezeBtn.innerHTML = '▶ Descongelar';
-      // Guardar el frame actual en un canvas ocult
+      
       frozenCanvas = document.createElement('canvas');
       frozenCanvas.width = canvas.width;
       frozenCanvas.height = canvas.height;
@@ -350,7 +394,23 @@
     } else {
       freezeBtn.classList.remove('active');
       freezeBtn.innerHTML = '📷 Congelar';
-      video.play();
+      await video.play();
+      frozenCanvas = null;
+      startLoop();
+    }
+    drawOverlay();
+  }
+
+  async function toggleTorch() {
+    if (videoTrack) {
+      vibrate();
+      const capabilities = videoTrack.getCapabilities();
+      if (capabilities.torch) {
+        const settings = videoTrack.getSettings();
+        await videoTrack.applyConstraints({
+          advanced: [{ torch: !settings.torch }]
+        });
+      }
     }
   }
 
@@ -368,17 +428,25 @@
   async function startCamera() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } }
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } }
       });
       video.srcObject = stream;
-      video.play();
+      videoTrack = stream.getVideoTracks()[0];
+      
+      const capabilities = videoTrack.getCapabilities?.();
+      if (capabilities && capabilities.torch) {
+        torchBtn.style.display = 'flex';
+      }
+
+      await video.play();
+      startLoop();
     } catch (err) {
       errorMsg.style.display = 'block';
-      errorMsg.textContent = "No s'ha pogut accedir a la càmera. Utilitza HTTPS i dona permisos.";
+      errorMsg.textContent = "Accés a la càmera denegat o no disponible.";
     }
   }
 
-  // --- GESTIÓ DE GESTOS TÀCTILS (Drag & Pinch-to-zoom) ---
+  // Touch Events
   canvas.addEventListener('touchstart', (e) => {
     if (e.touches.length === 1) {
       touchState.isDragging = true;
@@ -398,10 +466,8 @@
 
   canvas.addEventListener('touchmove', (e) => {
     if (touchState.isDragging && e.touches.length === 1) {
-      const dx = e.touches[0].clientX - touchState.startX;
-      const dy = e.touches[0].clientY - touchState.startY;
-      guide.x = touchState.initialGuideX + dx;
-      guide.y = touchState.initialGuideY + dy;
+      guide.x = touchState.initialGuideX + (e.touches[0].clientX - touchState.startX);
+      guide.y = touchState.initialGuideY + (e.touches[0].clientY - touchState.startY);
       drawOverlay();
     } else if (e.touches.length === 2) {
       const currentDist = Math.hypot(
@@ -409,18 +475,28 @@
         e.touches[0].clientY - e.touches[1].clientY
       );
       const factor = currentDist / touchState.initialPinchDist;
-      guide.radius = Math.max(40, Math.min(canvas.width * 0.8, touchState.initialRadius * factor));
+      guide.radius = Math.max(30, Math.min(canvas.width * 0.8, touchState.initialRadius * factor));
       drawOverlay();
     }
   });
 
   canvas.addEventListener('touchend', () => { touchState.isDragging = false; });
 
-  // --- DIBUIX DE LA GUIA I TALLS ---
+  // Render Loop
+  function startLoop() {
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    function loop() {
+      if (!isFrozen) {
+        drawOverlay();
+        animationFrameId = requestAnimationFrame(loop);
+      }
+    }
+    loop();
+  }
+
   function drawOverlay() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Si està congelat, dibuixar la foto de fons
     if (isFrozen && frozenCanvas) {
       ctx.drawImage(frozenCanvas, 0, 0);
     }
@@ -433,9 +509,12 @@
     ctx.rotate(rotationRad);
 
     ctx.shadowColor = lineColor;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = lineColor;
+    ctx.fillStyle = lineColor;
+    ctx.lineWidth = 2.5;
 
-    // 1. Contorn exterior
+    // Outer boundary
     ctx.beginPath();
     if (currentMode === 'circle') {
       ctx.arc(0, 0, r, 0, 2 * Math.PI);
@@ -445,21 +524,16 @@
       const w = r * guide.aspectRatio;
       ctx.rect(-w, -r, w * 2, r * 2);
     }
-    ctx.strokeStyle = lineColor;
-    ctx.lineWidth = 3;
-    ctx.setLineDash([8, 6]);
+    ctx.setLineDash([6, 6]);
     ctx.stroke();
 
-    // 2. Línies interiors de tall
+    // Slices
     if (slices > 1) {
       ctx.setLineDash([]);
-      ctx.strokeStyle = '#ff0055';
-      ctx.lineWidth = 3;
 
       if (currentMode === 'circle') {
         ctx.beginPath();
-        ctx.arc(0, 0, 5, 0, 2 * Math.PI);
-        ctx.fillStyle = '#ff0055';
+        ctx.arc(0, 0, 4, 0, 2 * Math.PI);
         ctx.fill();
 
         const angleStep = (2 * Math.PI) / slices;
@@ -471,7 +545,6 @@
           ctx.stroke();
         }
       } else {
-        // Formes quadrades / rectangulars
         const width = currentMode === 'rect' ? r * guide.aspectRatio : r;
         const left = -width;
         const top = -r;
@@ -479,17 +552,11 @@
         const hTotal = r * 2;
 
         if (slices === 2) {
-          ctx.beginPath();
-          ctx.moveTo(0, top);
-          ctx.lineTo(0, top + hTotal);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(0, top); ctx.lineTo(0, top + hTotal); ctx.stroke();
         } else if (slices === 3) {
           const step = wTotal / 3;
           for (let i = 1; i < 3; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * step, top);
-            ctx.lineTo(left + i * step, top + hTotal);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
           }
         } else if (slices === 4) {
           ctx.beginPath();
@@ -499,69 +566,37 @@
         } else if (slices === 6) {
           const stepX = wTotal / 3;
           for (let i = 1; i < 3; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + hTotal);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
           }
-          ctx.beginPath();
-          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0); ctx.stroke();
         } else if (slices === 8) {
           const stepX = wTotal / 4;
           for (let i = 1; i < 4; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + hTotal);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
           }
-          ctx.beginPath();
-          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0); ctx.stroke();
         } else if (slices === 9) {
           const stepX = wTotal / 3;
           const stepY = hTotal / 3;
           for (let i = 1; i < 3; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + hTotal);
-            ctx.moveTo(left, top + i * stepY);
-            ctx.lineTo(left + wTotal, top + i * stepY);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left + i * stepX, top); ctx.lineTo(left + i * stepX, top + hTotal); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left, top + i * stepY); ctx.lineTo(left + wTotal, top + i * stepY); ctx.stroke();
           }
-        } else if (slices === 10) {
-          const stepX = wTotal / 5;
-          for (let i = 1; i < 5; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + hTotal);
-            ctx.stroke();
-          }
-          ctx.beginPath();
-          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
-          ctx.stroke();
         } else {
           const step = wTotal / slices;
           for (let i = 1; i < slices; i++) {
-            ctx.beginPath();
-            ctx.moveTo(left + i * step, top);
-            ctx.lineTo(left + i * step, top + hTotal);
-            ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(left + i * step, top); ctx.lineTo(left + i * step, top + hTotal); ctx.stroke();
           }
         }
       }
     }
 
     ctx.restore();
-
-    if (!isFrozen) {
-      requestAnimationFrame(drawOverlay);
-    }
   }
 
   resizeCanvas();
   startCamera();
-  drawOverlay();
+  updateAngleInfo();
 </script>
 
 </body>
