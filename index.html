@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tallador de Pizza i Truites</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #000;
+      color: #fff;
+    }
+    #container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    video, canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    #controls {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.85);
+      padding: 12px 24px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    input[type=range] {
+      width: 130px;
+    }
+    span {
+      font-weight: bold;
+      font-size: 1.2rem;
+      min-width: 20px;
+      text-align: center;
+    }
+    #error-msg {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      display: none;
+      z-index: 20;
+      text-align: center;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="container">
+  <div id="error-msg"></div>
+  <video id="webcam" autoplay playsinline muted></video>
+  <canvas id="overlay"></canvas>
+
+  <div id="controls">
+    <label for="slices">Talls:</label>
+    <input type="range" id="slices" min="1" max="10" value="8">
+    <span id="slice-count">8</span>
+  </div>
+</div>
+
+<script>
+  const video = document.getElementById('webcam');
+  const canvas = document.getElementById('overlay');
+  const ctx = canvas.getContext('2d');
+  const slider = document.getElementById('slices');
+  const sliceCountDisplay = document.getElementById('slice-count');
+  const errorMsg = document.getElementById('error-msg');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function showError(msg) {
+    errorMsg.style.display = 'block';
+    errorMsg.textContent = msg;
+  }
+
+  // Sol·licitar accés a la càmera de forma compatible amb mòbils
+  async function startCamera() {
+    const constraintsOptions = [
+      { video: { facingMode: { ideal: "environment" } } }, // Intentar càmera posterior
+      { video: true }                                     // Qualsevol càmera com a alternativa
+    ];
+
+    for (const constraints of constraintsOptions) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        video.srcObject = stream;
+        video.play();
+        return;
+      } catch (err) {
+        console.warn("Error amb configuració:", constraints, err);
+      }
+    }
+
+    showError("No s'ha pogut accedir a la càmera. Assegura't de fer servir HTTPS i haver donat permisos al navegador.");
+  }
+
+  function drawGuide() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.65;
+    const numSlices = parseInt(slider.value, 10);
+
+    sliceCountDisplay.textContent = numSlices;
+
+    // Cercle exterior
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#00ffcc';
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 8]);
+    ctx.stroke();
+
+    // Punt central
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#ff0055';
+    ctx.fill();
+
+    // Línies de tall
+    if (numSlices > 1) {
+      const angleStep = (2 * Math.PI) / numSlices;
+      ctx.setLineDash([]);
+      ctx.strokeStyle = '#ff0055';
+      ctx.lineWidth = 3;
+
+      for (let i = 0; i < numSlices; i++) {
+        const angle = i * angleStep - (Math.PI / 2);
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+    }
+
+    requestAnimationFrame(drawGuide);
+  }
+
+  slider.addEventListener('input', () => {
+    sliceCountDisplay.textContent = slider.value;
+  });
+
+  startCamera();
+  drawGuide();
+</script>
+
+</body>
+</html>
