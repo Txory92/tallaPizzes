@@ -42,7 +42,7 @@
       object-fit: cover;
     }
 
-    /* Interfície UI */
+    /* Interfície UI Layer */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -52,7 +52,7 @@
       height: 100%;
       padding: calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 12px) 12px;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.3s ease;
       opacity: 1;
     }
 
@@ -60,7 +60,7 @@
       opacity: 0;
     }
     
-    /* Header Superior Adaptatiu */
+    /* Header Superior Nova Structura */
     .top-bar {
       display: flex;
       align-items: center;
@@ -72,7 +72,7 @@
     }
 
     .brand-pill {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 6px 12px;
@@ -81,9 +81,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      shrink: 0;
+      flex-shrink: 0;
       pointer-events: auto;
-      white-space: nowrap;
     }
     .brand-pill h1 {
       margin: 0;
@@ -102,6 +101,7 @@
     
     .top-actions {
       display: flex;
+      align-items: center;
       gap: 6px;
       overflow-x: auto;
       scroll-behavior: smooth;
@@ -110,12 +110,10 @@
       pointer-events: auto;
       padding: 2px 0;
     }
-    .top-actions::-webkit-scrollbar {
-      display: none;
-    }
+    .top-actions::-webkit-scrollbar { display: none; }
 
     .action-btn {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -137,6 +135,35 @@
       background: #ff0055;
       border-color: #ff6699;
       box-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+    }
+
+    /* Selector Eleganta de Proporcions (Pills) */
+    .aspect-selector {
+      display: flex;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      padding: 2px;
+      gap: 2px;
+      pointer-events: auto;
+    }
+    .aspect-btn {
+      border: none;
+      background: transparent;
+      color: #94a3b8;
+      padding: 4px 8px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .aspect-btn.active {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-weight: 700;
     }
 
     /* Panell Inferior Principal */
@@ -162,12 +189,6 @@
       justify-content: space-around;
       gap: 8px;
       font-size: 0.72rem;
-      animation: fadeIn 0.2s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .sub-bar label {
@@ -178,14 +199,8 @@
       gap: 6px;
     }
 
-    .sub-bar select, .sub-bar input[type="number"], .sub-bar input[type="range"] {
-      background: rgba(0, 0, 0, 0.4);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 6px;
-      padding: 2px 6px;
-      font-size: 0.72rem;
-      outline: none;
+    .sub-bar input[type="range"] {
+      accent-color: #ff0055;
     }
 
     .controls-card {
@@ -214,7 +229,7 @@
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 5px 10px;
+      padding: 5px 12px;
       font-size: 0.72rem;
       font-weight: 600;
       border-radius: 99px;
@@ -331,17 +346,29 @@
   <div id="error-msg"></div>
 
   <div class="ui-layer" id="ui-layer">
-    <!-- Header Superior -->
+    <!-- Header Superior Dinàmic -->
     <div class="top-bar">
       <div class="brand-pill">
         <h1>Slicer</h1>
         <span class="angle-badge" id="angle-info">45°</span>
       </div>
+
       <div class="top-actions">
-        <button id="show-degrees-btn" class="action-btn" onclick="toggleDegrees()">º Graus</button>
-        <button id="hole-btn" class="action-btn" onclick="toggleHole()">🍩 Forat</button>
-        <button id="unequal-btn" class="action-btn" onclick="toggleUnequal()">📐 Asimètric</button>
-        <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡</button>
+        <!-- Opcions específiques per a Rodona -->
+        <button id="degrees-btn" class="action-btn circle-only" onclick="toggleDegrees()">º Graus</button>
+        <button id="hole-btn" class="action-btn circle-only" onclick="toggleHole()">🍩 Forat</button>
+        <button id="unequal-btn" class="action-btn circle-only" onclick="toggleUnequal()">📐 Asimètric</button>
+
+        <!-- Selector Eleganta de Proporció per a Rectangle -->
+        <div id="aspect-wrapper" class="aspect-selector rect-only" style="display:none;">
+          <button class="aspect-btn active" onclick="setAspectRatio(1.333, this)">4:3</button>
+          <button class="aspect-btn" onclick="setAspectRatio(1.777, this)">16:9</button>
+          <button class="aspect-btn" onclick="setAspectRatio(2.0, this)">2:1</button>
+          <button class="aspect-btn" onclick="setAspectRatio(1.0, this)">1:1</button>
+        </div>
+
+        <!-- Controls Globals -->
+        <button id="torch-btn" class="action-btn" onclick="toggleTorch()" style="display:none;">💡 Flash</button>
         <button id="freeze-btn" class="action-btn" onclick="toggleFreeze()">📷 Congelar</button>
       </div>
     </div>
@@ -350,7 +377,7 @@
     <div class="controls-container">
       
       <!-- Sub-barra per al Mode Donut / Forat -->
-      <div class="sub-bar" id="subbar-hole" style="display:none;">
+      <div class="sub-bar circle-only-sub" id="subbar-hole" style="display:none;">
         <label>
           Forat interior:
           <input type="range" id="inner-radius-input" min="0.1" max="0.7" step="0.05" value="0.3" oninput="drawOverlay()">
@@ -358,7 +385,7 @@
       </div>
 
       <!-- Sub-barra per al Mode Asimètric -->
-      <div class="sub-bar" id="subbar-unequal" style="display:none;">
+      <div class="sub-bar circle-only-sub" id="subbar-unequal" style="display:none;">
         <label>
           Porció Gran:
           <input type="range" id="vip-slice-input" min="15" max="50" step="5" value="30" oninput="updateAngleInfo(); drawOverlay();">
@@ -366,37 +393,14 @@
         </label>
       </div>
 
-      <!-- Sub-barra per al Mode Rectangle (Proporcions) -->
-      <div class="sub-bar" id="subbar-rect" style="display:none;">
-        <label>Proporció:
-          <select id="aspect-ratio-select" onchange="updateAspectRatio()">
-            <option value="1.333">4:3 (Pa/Llauna)</option>
-            <option value="1.777">16:9 (Llarg)</option>
-            <option value="2.0">2:1 (Bandeja)</option>
-            <option value="1.0">1:1 (Quadrat)</option>
-          </select>
-        </label>
-      </div>
-
-      <!-- Sub-barra per al Mode Grid -->
-      <div class="sub-bar" id="subbar-grid" style="display:none;">
-        <label>Files:
-          <input type="number" id="grid-rows" min="1" max="10" value="3" style="width:40px;" onchange="drawOverlay()">
-        </label>
-        <label>Cols:
-          <input type="number" id="grid-cols" min="1" max="10" value="4" style="width:40px;" onchange="drawOverlay()">
-        </label>
-      </div>
-
       <!-- Controls Principals -->
       <div class="controls-card">
         <div class="selector-group">
           <button class="mode-btn active" onclick="setMode('circle', this)">Rodona</button>
-          <button class="mode-btn" onclick="setMode('rect', this)">Rect.</button>
-          <button class="mode-btn" onclick="setMode('grid', this)">Grid</button>
+          <button class="mode-btn" onclick="setMode('rect', this)">Rectangle</button>
         </div>
 
-        <div class="slice-control" id="slice-counter-wrapper">
+        <div class="slice-control">
           <button class="btn-step" onclick="changeSlices(-1)">−</button>
           <span class="count-badge" id="slice-count">8</span>
           <button class="btn-step" onclick="changeSlices(1)">+</button>
@@ -432,7 +436,7 @@
   const torchBtn = document.getElementById('torch-btn');
   const holeBtn = document.getElementById('hole-btn');
   const unequalBtn = document.getElementById('unequal-btn');
-  const showDegreesBtn = document.getElementById('show-degrees-btn');
+  const degreesBtn = document.getElementById('degrees-btn');
   const rotationInput = document.getElementById('rotation');
 
   let currentMode = 'circle';
@@ -441,7 +445,8 @@
   let isFrozen = false;
   let hasHole = false;
   let isUnequal = false;
-  let showDegrees = false; // Per defecte DESACTIVAT
+  let showDegrees = false;
+  let torchActive = false;
   let frozenCanvas = null;
   let videoTrack = null;
   let animationFrameId = null;
@@ -462,17 +467,6 @@
     initialPinchDist: 0, initialRadius: 0
   };
 
-  // --- SERVICE WORKER PWA ---
-  if ('serviceWorker' in navigator) {
-    const swCode = `
-      const CACHE_NAME = 'slicer-v2';
-      self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(['./']))));
-      self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
-    `;
-    const blob = new Blob([swCode], { type: 'text/javascript' });
-    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-  }
-
   // --- AUTO-HIDE INTERFÍCIE ---
   function resetIdleTimer() {
     uiLayer.classList.remove('idle');
@@ -480,7 +474,7 @@
     if (!isFrozen) {
       idleTimer = setTimeout(() => {
         uiLayer.classList.add('idle');
-      }, 3500);
+      }, 4000);
     }
   }
 
@@ -495,7 +489,7 @@
   function toggleDegrees() {
     vibrate();
     showDegrees = !showDegrees;
-    showDegreesBtn.classList.toggle('active', showDegrees);
+    degreesBtn.classList.toggle('active', showDegrees);
     drawOverlay();
   }
 
@@ -503,7 +497,7 @@
     vibrate();
     hasHole = !hasHole;
     holeBtn.classList.toggle('active', hasHole);
-    document.getElementById('subbar-hole').style.display = hasHole ? 'flex' : 'none';
+    document.getElementById('subbar-hole').style.display = (hasHole && currentMode === 'circle') ? 'flex' : 'none';
     drawOverlay();
   }
 
@@ -511,24 +505,20 @@
     vibrate();
     isUnequal = !isUnequal;
     unequalBtn.classList.toggle('active', isUnequal);
-    document.getElementById('subbar-unequal').style.display = isUnequal ? 'flex' : 'none';
+    document.getElementById('subbar-unequal').style.display = (isUnequal && currentMode === 'circle') ? 'flex' : 'none';
     updateAngleInfo();
     drawOverlay();
   }
 
-  function updateAspectRatio() {
-    guide.aspectRatio = parseFloat(document.getElementById('aspect-ratio-select').value);
+  function setAspectRatio(ratio, el) {
+    vibrate();
+    guide.aspectRatio = ratio;
+    document.querySelectorAll('.aspect-btn').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
     drawOverlay();
   }
 
   function updateAngleInfo() {
-    if (currentMode === 'grid') {
-      const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
-      const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
-      angleInfo.textContent = `${rows}x${cols} (${rows * cols})`;
-      return;
-    }
-
     if (isUnequal && currentMode === 'circle') {
       const vipPct = parseInt(document.getElementById('vip-slice-input').value, 10);
       document.getElementById('vip-percent-label').textContent = `${vipPct}%`;
@@ -552,9 +542,21 @@
     document.querySelectorAll('.selector-group .mode-btn').forEach(btn => btn.classList.remove('active'));
     el.classList.add('active');
 
-    document.getElementById('subbar-rect').style.display = mode === 'rect' ? 'flex' : 'none';
-    document.getElementById('subbar-grid').style.display = mode === 'grid' ? 'flex' : 'none';
-    document.getElementById('slice-counter-wrapper').style.display = mode === 'grid' ? 'none' : 'flex';
+    // Filtrar UI segons la figura geomètrica seleccionada
+    const circleElements = document.querySelectorAll('.circle-only');
+    const rectElements = document.querySelectorAll('.rect-only');
+
+    if (mode === 'circle') {
+      circleElements.forEach(e => e.style.display = 'flex');
+      rectElements.forEach(e => e.style.display = 'none');
+      document.getElementById('subbar-hole').style.display = hasHole ? 'flex' : 'none';
+      document.getElementById('subbar-unequal').style.display = isUnequal ? 'flex' : 'none';
+    } else {
+      circleElements.forEach(e => e.style.display = 'none');
+      rectElements.forEach(e => e.style.display = 'flex');
+      document.getElementById('subbar-hole').style.display = 'none';
+      document.getElementById('subbar-unequal').style.display = 'none';
+    }
 
     updateAngleInfo();
     drawOverlay();
@@ -562,7 +564,7 @@
 
   function changeSlices(delta) {
     vibrate();
-    slices = Math.min(16, Math.max(1, slices + delta));
+    slices = Math.min(24, Math.max(1, slices + delta));
     sliceCountDisplay.textContent = slices;
     updateAngleInfo();
     drawOverlay();
@@ -611,10 +613,15 @@
   async function toggleTorch() {
     if (videoTrack) {
       vibrate();
-      const capabilities = videoTrack.getCapabilities();
-      if (capabilities.torch) {
-        const settings = videoTrack.getSettings();
-        await videoTrack.applyConstraints({ advanced: [{ torch: !settings.torch }] });
+      try {
+        const capabilities = videoTrack.getCapabilities();
+        if (capabilities.torch) {
+          torchActive = !torchActive;
+          await videoTrack.applyConstraints({ advanced: [{ torch: torchActive }] });
+          torchBtn.classList.toggle('active', torchActive);
+        }
+      } catch (err) {
+        console.warn("No es pot canviar l'estat del flash", err);
       }
     }
   }
@@ -622,12 +629,6 @@
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    
-    // Mantenir la guia sempre dins dels marges visibles
-    guide.radius = Math.max(40, Math.min(Math.min(canvas.width, canvas.height) * 0.4, guide.radius));
-    guide.x = Math.max(guide.radius, Math.min(canvas.width - guide.radius, guide.x));
-    guide.y = Math.max(guide.radius, Math.min(canvas.height - guide.radius, guide.y));
-
     drawOverlay();
   }
   window.addEventListener('resize', resizeCanvas);
@@ -652,10 +653,10 @@
     }
   }
 
-  // Interacció Tàctil Segura (Fix del Zoom bug)
+  // --- GESTIÓ TÀCTIL I FIX DE ZOOM ---
   canvas.addEventListener('touchstart', (e) => {
     const now = Date.now();
-    if (now - lastTapTime < 300) {
+    if (now - lastTapTime < 300 && e.touches.length === 1) {
       guide.x = canvas.width / 2;
       guide.y = canvas.height / 2;
       vibrate();
@@ -679,18 +680,15 @@
       touchState.initialPinchDist = dist > 0 ? dist : 1;
       touchState.initialRadius = guide.radius;
     }
-  });
+  }, { passive: true });
 
   canvas.addEventListener('touchmove', (e) => {
     if (touchState.isDragging && e.touches.length === 1) {
-      let nextX = touchState.initialGuideX + (e.touches[0].clientX - touchState.startX);
-      let nextY = touchState.initialGuideY + (e.touches[0].clientY - touchState.startY);
+      const nextX = touchState.initialGuideX + (e.touches[0].clientX - touchState.startX);
+      const nextY = touchState.initialGuideY + (e.touches[0].clientY - touchState.startY);
 
-      // Limitar per no sortir de la pantalla
-      const margin = 20;
-      guide.x = Math.max(margin, Math.min(canvas.width - margin, nextX));
-      guide.y = Math.max(margin, Math.min(canvas.height - margin, nextY));
-
+      guide.x = Math.max(20, Math.min(canvas.width - 20, nextX));
+      guide.y = Math.max(20, Math.min(canvas.height - 20, nextY));
       drawOverlay();
     } else if (e.touches.length === 2) {
       const currentDist = Math.hypot(
@@ -700,16 +698,19 @@
 
       if (touchState.initialPinchDist > 0) {
         const factor = currentDist / touchState.initialPinchDist;
-        const minAllowed = 40; // Ràdi mínim absolut
-        const maxAllowed = Math.min(canvas.width, canvas.height) * 0.45; // Radi màxim absolut
+        const minAllowed = 30;
+        const maxAllowed = Math.min(canvas.width, canvas.height) * 0.48;
 
         guide.radius = Math.max(minAllowed, Math.min(maxAllowed, touchState.initialRadius * factor));
         drawOverlay();
       }
     }
-  });
+  }, { passive: true });
 
-  canvas.addEventListener('touchend', () => { touchState.isDragging = false; });
+  canvas.addEventListener('touchend', () => { 
+    touchState.isDragging = false; 
+    touchState.initialPinchDist = 0;
+  }, { passive: true });
 
   function startLoop() {
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -731,7 +732,7 @@
     }
 
     const rotationRad = (parseInt(rotationInput.value, 10) * Math.PI) / 180;
-    const r = Math.max(30, guide.radius); // Seguretat addicional per no dibuixar r<=0
+    const r = Math.max(30, guide.radius);
     const innerRRatio = parseFloat(document.getElementById('inner-radius-input').value);
     const innerR = r * innerRRatio;
 
@@ -745,18 +746,18 @@
     ctx.fillStyle = lineColor;
     ctx.lineWidth = 2.5;
 
-    // Outer Boundary
+    // Perímetre Exterior
     ctx.beginPath();
     if (currentMode === 'circle') {
       ctx.arc(0, 0, r, 0, 2 * Math.PI);
-    } else if (currentMode === 'rect' || currentMode === 'grid') {
+    } else if (currentMode === 'rect') {
       const w = r * guide.aspectRatio;
       ctx.rect(-w, -r, w * 2, r * 2);
     }
     ctx.setLineDash([6, 6]);
     ctx.stroke();
 
-    // Inner Hole (Mode Donut)
+    // Forat interior Donut
     if (hasHole && currentMode === 'circle') {
       ctx.beginPath();
       ctx.arc(0, 0, innerR, 0, 2 * Math.PI);
@@ -801,13 +802,8 @@
           if (showDegrees) drawAngleTag(angle, r);
         }
       }
-    } else if (currentMode === 'grid') {
-      // Grid Personalitzat
-      const rows = parseInt(document.getElementById('grid-rows').value, 10) || 1;
-      const cols = parseInt(document.getElementById('grid-cols').value, 10) || 1;
-      drawGrid(r, rows, cols);
     } else if (currentMode === 'rect') {
-      // Mode Rectangle Intel·ligent (Grid segons nombre de porcions)
+      // Rectangle Intel·ligent (Calcula files i columnes segons quantitat)
       let rows = 1;
       let cols = slices;
 
@@ -819,6 +815,8 @@
       else if (slices === 12) { rows = 3; cols = 4; }
       else if (slices === 15) { rows = 3; cols = 5; }
       else if (slices === 16) { rows = 4; cols = 4; }
+      else if (slices === 20) { rows = 4; cols = 5; }
+      else if (slices === 24) { rows = 4; cols = 6; }
 
       drawGrid(r, rows, cols);
     }
@@ -826,7 +824,6 @@
     ctx.restore();
   }
 
-  // Dibuixa retícules de forma neta
   function drawGrid(r, rows, cols) {
     const width = r * guide.aspectRatio;
     const left = -width;
@@ -851,7 +848,6 @@
     }
   }
 
-  // Dibuixa marques visuals de graus (Només quan està activat)
   function drawAngleTag(angleRad, radius) {
     ctx.save();
     let deg = Math.round(((angleRad + Math.PI / 2) * 180 / Math.PI) % 360);
