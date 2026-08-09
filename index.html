@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Smart Slicer - Tallador de Pizza i Truites</title>
+  <title>Smart Slicer PRO - Tallador de Pizza i Truites</title>
   <style>
     * {
       box-sizing: border-box;
@@ -34,7 +34,7 @@
       height: 100%;
       object-fit: cover;
     }
-    /* Capa d'interfície */
+    /* Capa d'interfície UI */
     .ui-layer {
       position: relative;
       z-index: 10;
@@ -42,61 +42,84 @@
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
-      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 24px) 16px;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
       pointer-events: none;
     }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      pointer-events: auto;
+    }
     .header {
-      background: rgba(15, 23, 42, 0.75);
+      background: rgba(15, 23, 42, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: 10px 22px;
+      padding: 8px 16px;
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      align-self: center;
-      text-align: center;
-      pointer-events: auto;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
     .header h1 {
       margin: 0;
-      font-size: 1.15rem;
+      font-size: 1rem;
       font-weight: 800;
-      letter-spacing: 0.5px;
       background: linear-gradient(135deg, #00f2fe, #4facfe);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+    .action-btn {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+    .action-btn.active {
+      background: #ef4444;
+      border-color: #f87171;
+    }
     /* Targeta de controls inferior */
     .controls-card {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 28px;
-      padding: 16px 20px;
+      padding: 14px 18px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       pointer-events: auto;
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
       margin: 0 auto;
     }
     .selector-group {
       display: flex;
       background: rgba(255, 255, 255, 0.08);
       border-radius: 14px;
-      padding: 4px;
-      gap: 4px;
+      padding: 3px;
+      gap: 3px;
     }
     .mode-btn {
       flex: 1;
       border: none;
       background: transparent;
       color: #94a3b8;
-      padding: 10px 0;
-      font-size: 0.9rem;
+      padding: 8px 0;
+      font-size: 0.8rem;
       font-weight: 700;
       border-radius: 11px;
       cursor: pointer;
@@ -114,19 +137,18 @@
       gap: 12px;
     }
     .btn-step {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.15s;
     }
     .btn-step:active {
       background: rgba(56, 189, 248, 0.4);
@@ -137,17 +159,51 @@
       align-items: center;
     }
     .count-badge {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       color: #38bdf8;
       line-height: 1;
     }
     .count-label {
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: #94a3b8;
       margin-top: 2px;
+    }
+    .tool-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 10px;
+    }
+    .color-picker {
+      display: flex;
+      gap: 8px;
+    }
+    .color-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .color-dot.active {
+      border-color: #fff;
+      transform: scale(1.15);
+    }
+    .rotation-control {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+    }
+    .rotation-control input {
+      width: 80px;
+      accent-color: #38bdf8;
     }
     #error-msg {
       position: absolute;
@@ -175,14 +231,20 @@
   <div id="error-msg"></div>
 
   <div class="ui-layer">
-    <div class="header">
-      <h1>Smart Slicer</h1>
+    <div class="top-bar">
+      <div class="header">
+        <h1>Smart Slicer</h1>
+      </div>
+      <button id="freeze-btn" class="action-btn" onclick="toggleFreeze()">
+        📷 Congelar
+      </button>
     </div>
 
     <div class="controls-card">
       <div class="selector-group">
         <button class="mode-btn active" onclick="setMode('circle')">Rodona</button>
         <button class="mode-btn" onclick="setMode('square')">Quadrat</button>
+        <button class="mode-btn" onclick="setMode('rect')">Rectangle</button>
       </div>
 
       <div class="slice-control-row">
@@ -192,6 +254,20 @@
           <span class="count-label">Porcions</span>
         </div>
         <button class="btn-step" onclick="changeSlices(1)">+</button>
+      </div>
+
+      <div class="tool-row">
+        <div class="color-picker">
+          <div class="color-dot active" style="background: #00f2fe;" onclick="setColor('#00f2fe', this)"></div>
+          <div class="color-dot" style="background: #00ff66;" onclick="setColor('#00ff66', this)"></div>
+          <div class="color-dot" style="background: #ff0055;" onclick="setColor('#ff0055', this)"></div>
+          <div class="color-dot" style="background: #ffea00;" onclick="setColor('#ffea00', this)"></div>
+        </div>
+
+        <div class="rotation-control">
+          <span>Gira:</span>
+          <input type="range" id="rotation" min="0" max="360" value="0" oninput="drawOverlay()">
+        </div>
       </div>
     </div>
   </div>
@@ -203,27 +279,91 @@
   const ctx = canvas.getContext('2d');
   const sliceCountDisplay = document.getElementById('slice-count');
   const errorMsg = document.getElementById('error-msg');
+  const freezeBtn = document.getElementById('freeze-btn');
+  const rotationInput = document.getElementById('rotation');
 
   let currentMode = 'circle';
   let slices = 8;
+  let lineColor = '#00f2fe';
+  let isFrozen = false;
+  let frozenCanvas = null;
+
+  // Estat de la guia (Posició i mida ajustable amb gestos)
+  let guide = {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+    radius: Math.min(window.innerWidth, window.innerHeight) * 0.3,
+    aspectRatio: 1.4 // Per al mode rectangle
+  };
+
+  // Control de gestos tàctils
+  let touchState = {
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    initialGuideX: 0,
+    initialGuideY: 0,
+    initialPinchDist: 0,
+    initialRadius: 0
+  };
+
+  function vibrate() {
+    if (navigator.vibrate) navigator.vibrate(15);
+  }
 
   function setMode(mode) {
+    vibrate();
     currentMode = mode;
-    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.selector-group .mode-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
+    drawOverlay();
   }
 
   function changeSlices(delta) {
+    vibrate();
     slices = Math.min(10, Math.max(1, slices + delta));
     sliceCountDisplay.textContent = slices;
+    drawOverlay();
+  }
+
+  function setColor(color, el) {
+    vibrate();
+    lineColor = color;
+    document.querySelectorAll('.color-dot').forEach(dot => dot.classList.remove('active'));
+    el.classList.add('active');
+    drawOverlay();
+  }
+
+  function toggleFreeze() {
+    vibrate();
+    isFrozen = !isFrozen;
+    if (isFrozen) {
+      freezeBtn.classList.add('active');
+      freezeBtn.innerHTML = '▶ Descongelar';
+      // Guardar el frame actual en un canvas ocult
+      frozenCanvas = document.createElement('canvas');
+      frozenCanvas.width = canvas.width;
+      frozenCanvas.height = canvas.height;
+      const fCtx = frozenCanvas.getContext('2d');
+      fCtx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      video.pause();
+    } else {
+      freezeBtn.classList.remove('active');
+      freezeBtn.innerHTML = '📷 Congelar';
+      video.play();
+    }
   }
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    if (!touchState.isDragging) {
+      guide.x = canvas.width / 2;
+      guide.y = canvas.height / 2;
+    }
+    drawOverlay();
   }
   window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
 
   async function startCamera() {
     try {
@@ -234,144 +374,178 @@
       video.play();
     } catch (err) {
       errorMsg.style.display = 'block';
-      errorMsg.textContent = "No s'ha pogut accedir a la càmera. Assegura't de fer servir HTTPS i haver donat permisos al navegador.";
+      errorMsg.textContent = "No s'ha pogut accedir a la càmera. Utilitza HTTPS i dona permisos.";
     }
   }
 
+  // --- GESTIÓ DE GESTOS TÀCTILS (Drag & Pinch-to-zoom) ---
+  canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      touchState.isDragging = true;
+      touchState.startX = e.touches[0].clientX;
+      touchState.startY = e.touches[0].clientY;
+      touchState.initialGuideX = guide.x;
+      touchState.initialGuideY = guide.y;
+    } else if (e.touches.length === 2) {
+      touchState.isDragging = false;
+      touchState.initialPinchDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      touchState.initialRadius = guide.radius;
+    }
+  });
+
+  canvas.addEventListener('touchmove', (e) => {
+    if (touchState.isDragging && e.touches.length === 1) {
+      const dx = e.touches[0].clientX - touchState.startX;
+      const dy = e.touches[0].clientY - touchState.startY;
+      guide.x = touchState.initialGuideX + dx;
+      guide.y = touchState.initialGuideY + dy;
+      drawOverlay();
+    } else if (e.touches.length === 2) {
+      const currentDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const factor = currentDist / touchState.initialPinchDist;
+      guide.radius = Math.max(40, Math.min(canvas.width * 0.8, touchState.initialRadius * factor));
+      drawOverlay();
+    }
+  });
+
+  canvas.addEventListener('touchend', () => { touchState.isDragging = false; });
+
+  // --- DIBUIX DE LA GUIA I TALLS ---
   function drawOverlay() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = Math.min(centerX, centerY) * 0.65;
+    // Si està congelat, dibuixar la foto de fons
+    if (isFrozen && frozenCanvas) {
+      ctx.drawImage(frozenCanvas, 0, 0);
+    }
+
+    const rotationRad = (parseInt(rotationInput.value, 10) * Math.PI) / 180;
+    const r = guide.radius;
 
     ctx.save();
-    ctx.shadowColor = 'rgba(0, 242, 254, 0.5)';
-    ctx.shadowBlur = 10;
+    ctx.translate(guide.x, guide.y);
+    ctx.rotate(rotationRad);
 
-    // 1. Dibuixar contorn exterior
+    ctx.shadowColor = lineColor;
+    ctx.shadowBlur = 12;
+
+    // 1. Contorn exterior
     ctx.beginPath();
     if (currentMode === 'circle') {
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    } else {
-      ctx.rect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+      ctx.arc(0, 0, r, 0, 2 * Math.PI);
+    } else if (currentMode === 'square') {
+      ctx.rect(-r, -r, r * 2, r * 2);
+    } else if (currentMode === 'rect') {
+      const w = r * guide.aspectRatio;
+      ctx.rect(-w, -r, w * 2, r * 2);
     }
-    ctx.strokeStyle = '#00f2fe';
+    ctx.strokeStyle = lineColor;
     ctx.lineWidth = 3;
     ctx.setLineDash([8, 6]);
     ctx.stroke();
 
-    // 2. Dibuixar línies de tall interiors
+    // 2. Línies interiors de tall
     if (slices > 1) {
       ctx.setLineDash([]);
       ctx.strokeStyle = '#ff0055';
       ctx.lineWidth = 3;
 
       if (currentMode === 'circle') {
-        // Dibuixar centre
         ctx.beginPath();
-        ctx.arc(centerX, centerY, 5, 0, 2 * Math.PI);
+        ctx.arc(0, 0, 5, 0, 2 * Math.PI);
         ctx.fillStyle = '#ff0055';
         ctx.fill();
 
-        // Talls radials
         const angleStep = (2 * Math.PI) / slices;
         for (let i = 0; i < slices; i++) {
           const angle = i * angleStep - (Math.PI / 2);
-          const x = centerX + radius * Math.cos(angle);
-          const y = centerY + radius * Math.sin(angle);
-
           ctx.beginPath();
-          ctx.moveTo(centerX, centerY);
-          ctx.lineTo(x, y);
+          ctx.moveTo(0, 0);
+          ctx.lineTo(r * Math.cos(angle), r * Math.sin(angle));
           ctx.stroke();
         }
       } else {
-        // Talls per a formes quadrades/rectangulars
-        const left = centerX - radius;
-        const top = centerY - radius;
-        const size = radius * 2;
+        // Formes quadrades / rectangulars
+        const width = currentMode === 'rect' ? r * guide.aspectRatio : r;
+        const left = -width;
+        const top = -r;
+        const wTotal = width * 2;
+        const hTotal = r * 2;
 
         if (slices === 2) {
-          // 2 porcions: Línia central vertical
           ctx.beginPath();
-          ctx.moveTo(centerX, top);
-          ctx.lineTo(centerX, top + size);
+          ctx.moveTo(0, top);
+          ctx.lineTo(0, top + hTotal);
           ctx.stroke();
         } else if (slices === 3) {
-          // 3 porcions: 2 línies verticals
-          const step = size / 3;
+          const step = wTotal / 3;
           for (let i = 1; i < 3; i++) {
             ctx.beginPath();
             ctx.moveTo(left + i * step, top);
-            ctx.lineTo(left + i * step, top + size);
+            ctx.lineTo(left + i * step, top + hTotal);
             ctx.stroke();
           }
         } else if (slices === 4) {
-          // 4 porcions: Creu (2x2)
           ctx.beginPath();
-          ctx.moveTo(centerX, top);
-          ctx.lineTo(centerX, top + size);
-          ctx.moveTo(left, centerY);
-          ctx.lineTo(left + size, centerY);
+          ctx.moveTo(0, top); ctx.lineTo(0, top + hTotal);
+          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
           ctx.stroke();
         } else if (slices === 6) {
-          // 6 porcions: Reixeta (3x2)
-          const stepX = size / 3;
+          const stepX = wTotal / 3;
           for (let i = 1; i < 3; i++) {
             ctx.beginPath();
             ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + size);
+            ctx.lineTo(left + i * stepX, top + hTotal);
             ctx.stroke();
           }
           ctx.beginPath();
-          ctx.moveTo(left, centerY);
-          ctx.lineTo(left + size, centerY);
+          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
           ctx.stroke();
         } else if (slices === 8) {
-          // 8 porcions: Reixeta (4x2)
-          const stepX = size / 4;
+          const stepX = wTotal / 4;
           for (let i = 1; i < 4; i++) {
             ctx.beginPath();
             ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + size);
+            ctx.lineTo(left + i * stepX, top + hTotal);
             ctx.stroke();
           }
           ctx.beginPath();
-          ctx.moveTo(left, centerY);
-          ctx.lineTo(left + size, centerY);
+          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
           ctx.stroke();
         } else if (slices === 9) {
-          // 9 porcions: Reixeta (3x3)
-          const step = size / 3;
+          const stepX = wTotal / 3;
+          const stepY = hTotal / 3;
           for (let i = 1; i < 3; i++) {
             ctx.beginPath();
-            ctx.moveTo(left + i * step, top);
-            ctx.lineTo(left + i * step, top + size);
-            ctx.moveTo(left, top + i * step);
-            ctx.lineTo(left + size, top + i * step);
+            ctx.moveTo(left + i * stepX, top);
+            ctx.lineTo(left + i * stepX, top + hTotal);
+            ctx.moveTo(left, top + i * stepY);
+            ctx.lineTo(left + wTotal, top + i * stepY);
             ctx.stroke();
           }
         } else if (slices === 10) {
-          // 10 porcions: Reixeta (5x2)
-          const stepX = size / 5;
+          const stepX = wTotal / 5;
           for (let i = 1; i < 5; i++) {
             ctx.beginPath();
             ctx.moveTo(left + i * stepX, top);
-            ctx.lineTo(left + i * stepX, top + size);
+            ctx.lineTo(left + i * stepX, top + hTotal);
             ctx.stroke();
           }
           ctx.beginPath();
-          ctx.moveTo(left, centerY);
-          ctx.lineTo(left + size, centerY);
+          ctx.moveTo(left, 0); ctx.lineTo(left + wTotal, 0);
           ctx.stroke();
         } else {
-          // Tirades verticals regulars per a números prims o no estàndard (ex: 5, 7)
-          const step = size / slices;
+          const step = wTotal / slices;
           for (let i = 1; i < slices; i++) {
             ctx.beginPath();
             ctx.moveTo(left + i * step, top);
-            ctx.lineTo(left + i * step, top + size);
+            ctx.lineTo(left + i * step, top + hTotal);
             ctx.stroke();
           }
         }
@@ -379,9 +553,13 @@
     }
 
     ctx.restore();
-    requestAnimationFrame(drawOverlay);
+
+    if (!isFrozen) {
+      requestAnimationFrame(drawOverlay);
+    }
   }
 
+  resizeCanvas();
   startCamera();
   drawOverlay();
 </script>
